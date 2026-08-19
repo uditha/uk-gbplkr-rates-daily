@@ -1,5 +1,6 @@
 import { colorForBehind, heatmapGradient } from "@/lib/heatmap";
 import { WISE_PROVIDER_ID } from "@/lib/providers/wise";
+import { REVOLUT_PROVIDER_ID } from "@/lib/providers/revolut";
 import type { ComparisonRates, Quote } from "@/lib/providers/types";
 
 function formatRate(rate: number) {
@@ -65,7 +66,10 @@ export function RateHeatmap({ data }: { data: ComparisonRates }) {
                       label={amount.label}
                       providerName={provider.name}
                       caption={
-                        provider.id === WISE_PROVIDER_ID ? "max 5M" : "n/a"
+                        provider.id === WISE_PROVIDER_ID ||
+                        provider.id === REVOLUT_PROVIDER_ID
+                          ? "max 5M"
+                          : "n/a"
                       }
                     />
                   );

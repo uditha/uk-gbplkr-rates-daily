@@ -23,6 +23,12 @@ import {
   TAPTAP_RATES_URL,
   fetchTaptapSnapshot,
 } from "./taptap-send";
+import {
+  REVOLUT_PROVIDER_ID,
+  REVOLUT_PROVIDER_NAME,
+  REVOLUT_RATES_URL,
+  fetchRevolutSnapshot,
+} from "./revolut";
 
 export type ProviderDefinition = {
   id: string;
@@ -57,10 +63,10 @@ export const PROVIDER_REGISTRY: ProviderDefinition[] = [
     fetchSnapshot: fetchTaptapSnapshot,
   },
   {
-    id: "revolut-standard",
-    name: "Revolut (Standard)",
-    sourceUrl: null,
-    fetchSnapshot: null,
+    id: REVOLUT_PROVIDER_ID,
+    name: REVOLUT_PROVIDER_NAME,
+    sourceUrl: REVOLUT_RATES_URL,
+    fetchSnapshot: fetchRevolutSnapshot,
   },
   {
     id: "remitly-standard",

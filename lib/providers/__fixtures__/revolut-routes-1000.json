@@ -1,0 +1,47 @@
+{
+  "sender": {
+    "amount": 100000,
+    "currency": "GBP"
+  },
+  "recipient": {
+    "amount": 45074700,
+    "currency": "LKR"
+  },
+  "rate": {
+    "from": "GBP",
+    "to": "LKR",
+    "rate": 450.74700721906385,
+    "dealing": true,
+    "timestamp": 1787155913587
+  },
+  "transferLimits": {
+    "lower": {
+      "amount": 50000,
+      "currency": "LKR"
+    },
+    "upper": {
+      "amount": 499999900,
+      "currency": "LKR"
+    }
+  },
+  "routes": [
+    {
+      "id": "BANK",
+      "name": "Bank transfer",
+      "plans": [
+        {
+          "id": "STANDARD",
+          "name": "Standard",
+          "fees": {
+            "fx": 0,
+            "transfer": 170,
+            "ftt": 0,
+            "total": 170,
+            "cost": 100170,
+            "currency": "GBP"
+          }
+        }
+      ]
+    }
+  ]
+}

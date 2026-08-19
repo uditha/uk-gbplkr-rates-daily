@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-19T16:04:54.683Z",
+  "updatedAt": "2026-08-19T16:12:56.943Z",
   "providers": [
     {
       "id": "remitwire-boc-uk",
@@ -433,12 +433,83 @@
     {
       "id": "revolut-standard",
       "name": "Revolut (Standard)",
-      "wired": false,
-      "sourceUrl": null,
-      "status": "not_wired",
-      "updatedAt": null,
+      "wired": true,
+      "sourceUrl": "https://www.revolut.com/en-GB/send-money/",
+      "status": "ok",
+      "updatedAt": "2026-08-19T16:12:56.943Z",
       "error": null,
-      "snapshot": null
+      "snapshot": {
+        "id": "revolut-standard",
+        "name": "Revolut (Standard)",
+        "sourceUrl": "https://www.revolut.com/en-GB/send-money/",
+        "pair": "GBPLKR",
+        "boardRate": 450.07804120665577,
+        "rateKind": "send",
+        "asOf": "19/08/2026",
+        "quotes": [
+          {
+            "amountGbp": 300,
+            "feeGbp": 1.7,
+            "netGbp": 300,
+            "lkrReceived": 135023.41,
+            "effectiveRate": 447.54196221412,
+            "behindBoardRate": 2.5360789925357494
+          },
+          {
+            "amountGbp": 500,
+            "feeGbp": 1.7,
+            "netGbp": 500,
+            "lkrReceived": 225039.02,
+            "effectiveRate": 448.55295993621684,
+            "behindBoardRate": 1.5250812704389318
+          },
+          {
+            "amountGbp": 1000,
+            "feeGbp": 1.7,
+            "netGbp": 1000,
+            "lkrReceived": 450780.12,
+            "effectiveRate": 450.01509433962264,
+            "behindBoardRate": 0.7650322980368287
+          },
+          {
+            "amountGbp": 2000,
+            "feeGbp": 13,
+            "netGbp": 2000,
+            "lkrReceived": 901560.25,
+            "effectiveRate": 447.86897665176355,
+            "behindBoardRate": 2.911149985895918
+          },
+          {
+            "amountGbp": 2500,
+            "feeGbp": 18.75,
+            "netGbp": 2500,
+            "lkrReceived": 1126950.31,
+            "effectiveRate": 447.4244406947891,
+            "behindBoardRate": 3.355685942870366
+          },
+          {
+            "amountGbp": 5000,
+            "feeGbp": 47.5,
+            "netGbp": 5000,
+            "lkrReceived": 2253900.63,
+            "effectiveRate": 446.538014858841,
+            "behindBoardRate": 4.242111778818469
+          },
+          {
+            "amountGbp": 10000,
+            "feeGbp": 105,
+            "netGbp": 10000,
+            "lkrReceived": 4508399.8,
+            "effectiveRate": 446.15534883720926,
+            "behindBoardRate": 4.684632063550737
+          },
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      }
     },
     {
       "id": "remitly-standard",
