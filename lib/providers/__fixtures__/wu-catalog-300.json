@@ -1,0 +1,150 @@
+{
+  "response_status": {
+    "status": 0,
+    "code": "P0000",
+    "message": "OK.SUCCESSFUL PROCESSING",
+    "long_message": "NO ERRORS--NO WARNINGS.1592790.2026-08-19 17:12:55.876_2026-08-19 17:12:55.944"
+  },
+  "sender": {
+    "channel": "WWEB",
+    "client": "WUCOM",
+    "cty_iso2_ext": "GB",
+    "curr_iso3": "GBP",
+    "cpc": "UKD",
+    "funds_in": "*",
+    "send_amount": 300
+  },
+  "receiver": {
+    "cty_iso2_ext": "LK",
+    "curr_iso3": "LKR"
+  },
+  "available_funds_in": "CC,PA,GP,EB,TR,AP",
+  "services_groups": [
+    {
+      "service": "000",
+      "service_name": "Money In Minutes",
+      "fund_out": "000",
+      "fund_out_mnem": "MM",
+      "cpc": "SRI",
+      "dir_flag": "N",
+      "test_question": "N",
+      "test_q_max_amnt": 99999999.99,
+      "fx_fix_flag": "S",
+      "max_payout": 99999999.99,
+      "speed_days": 1,
+      "pay_groups": [
+        {
+          "fund_in": "PA",
+          "pricing_context": "/WWEB/WUCOM/UKD//SRI//000/NA/PA//WWEBPA000L0/2YR2FJ3DHW-null/GBLKLKRPA0L0W:L0:L0/300.00/126534.42/S/0.73768073/331.00000000/6.0/421.7813850/////",
+          "fx_rate": 421.781385,
+          "send_amount": 300,
+          "receive_amount": 126534.42,
+          "gross_amount": 302.99,
+          "gross_fee": 2.99,
+          "base_fee": 2.99,
+          "surcharge_fee": 0,
+          "msg_fee": 0,
+          "msg_meta": "0.00,0,0.00",
+          "min_amount": 0,
+          "max_amount": 9999999,
+          "speed_indicator": "0"
+        },
+        {
+          "fund_in": "EB",
+          "pricing_context": "/WWEB/WUCOM/UKD//SRI//000/NA/EB//WWEBEB000L0/2YR2FJ3DHW-null/GBLKLKREB0L0W:L0:L0/300.00/126534.42/S/0.73768073/331.00000000/6.0/421.7813850/////",
+          "fx_rate": 421.781385,
+          "send_amount": 300,
+          "receive_amount": 126534.42,
+          "gross_amount": 304.99,
+          "gross_fee": 4.99,
+          "base_fee": 4.99,
+          "surcharge_fee": 0,
+          "msg_fee": 0,
+          "msg_meta": "0.00,0,0.00",
+          "min_amount": 0,
+          "max_amount": 21474836.46,
+          "speed_indicator": "0"
+        },
+        {
+          "fund_in": "TR",
+          "pricing_context": "/WWEB/WUCOM/UKD//SRI//000/111111/TR//WWEBTR000L0/2YR2FJ3DHW-null/GBLKLKREB0L0W:L0:L0/300.00/126534.42/S/0.73768073/331.00000000/6.0/421.7813850/////",
+          "fx_rate": 421.781385,
+          "send_amount": 300,
+          "receive_amount": 126534.42,
+          "gross_amount": 302.99,
+          "gross_fee": 2.99,
+          "base_fee": 2.99,
+          "surcharge_fee": 0,
+          "msg_fee": 0,
+          "msg_meta": "0.00,0,0.00",
+          "min_amount": 0,
+          "max_amount": 9999999,
+          "speed_indicator": "0"
+        }
+      ]
+    },
+    {
+      "service": "500",
+      "service_name": "DIRECT TO BANK",
+      "fund_out": "500",
+      "fund_out_mnem": "DB",
+      "cpc": "SRI",
+      "dir_flag": "N",
+      "test_question": "N",
+      "test_q_max_amnt": 99999999.99,
+      "fx_fix_flag": "S",
+      "max_payout": 99999999.99,
+      "speed_days": 1,
+      "pay_groups": [
+        {
+          "fund_in": "PA",
+          "pricing_context": "/WWEB/WUCOM/UKD//SRI//500/LKL55\\EBD/PA//WWEBPA500L0/2YR2FJ3DHW-null/GBLKLKRPA5L0W:L0:L0/300.00/134450.42/S/0.73768073/331.50000000/0.27/448.1680713////B/",
+          "fx_rate": 448.1680713,
+          "send_amount": 300,
+          "receive_amount": 134450.42,
+          "gross_amount": 300.99,
+          "gross_fee": 0.99,
+          "base_fee": 0.99,
+          "surcharge_fee": 0,
+          "msg_fee": 0,
+          "msg_meta": "0.00,0,0.00",
+          "min_amount": 0,
+          "max_amount": 9999999999.99,
+          "speed_indicator": "0"
+        },
+        {
+          "fund_in": "EB",
+          "pricing_context": "/WWEB/WUCOM/UKD//SRI//500/LKL55\\EBD/EB//WWEBEB500L0/2YR2FJ3DHW-null/GBLKLKREB5L0W:L0:L0/300.00/131578.87/S/0.73768073/331.50000000/2.4/438.5962474////B/",
+          "fx_rate": 438.5962474,
+          "send_amount": 300,
+          "receive_amount": 131578.87,
+          "gross_amount": 300.99,
+          "gross_fee": 0.99,
+          "base_fee": 0.99,
+          "surcharge_fee": 0,
+          "msg_fee": 0,
+          "msg_meta": "0.00,0,0.00",
+          "min_amount": 0,
+          "max_amount": 9999999999.99,
+          "speed_indicator": "0"
+        },
+        {
+          "fund_in": "TR",
+          "pricing_context": "/WWEB/WUCOM/UKD//SRI//500/LKL55\\EBD/TR//WWEBTR500L0/2YR2FJ3DHW-null/GBLKLKRTR5L0W:L0:L0/300.00/131578.87/S/0.73768073/331.50000000/2.4/438.5962474////B/",
+          "fx_rate": 438.5962474,
+          "send_amount": 300,
+          "receive_amount": 131578.87,
+          "gross_amount": 300.99,
+          "gross_fee": 0.99,
+          "base_fee": 0.99,
+          "surcharge_fee": 0,
+          "msg_fee": 0,
+          "msg_meta": "0.00,0,0.00",
+          "min_amount": 0,
+          "max_amount": 9999999999.99,
+          "speed_indicator": "0"
+        }
+      ]
+    }
+  ]
+}

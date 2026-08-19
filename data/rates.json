@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-19T16:33:40.225Z",
+  "updatedAt": "2026-08-19T17:16:41.229Z",
   "providers": [
     {
       "id": "remitwire-boc-uk",
@@ -630,32 +630,308 @@
     {
       "id": "western-union-bank",
       "name": "Western Union (bank)",
-      "wired": false,
-      "sourceUrl": null,
-      "status": "not_wired",
-      "updatedAt": null,
+      "wired": true,
+      "sourceUrl": "https://www.westernunion.com/gb/en/web/send-money/start",
+      "status": "ok",
+      "updatedAt": "2026-08-19T17:16:38.600Z",
       "error": null,
-      "snapshot": null
+      "snapshot": {
+        "id": "western-union-bank",
+        "name": "Western Union (bank)",
+        "sourceUrl": "https://www.westernunion.com/gb/en/web/send-money/start",
+        "pair": "GBPLKR",
+        "boardRate": 448.1680713,
+        "rateKind": "send",
+        "asOf": "19/08/2026",
+        "quotes": [
+          {
+            "amountGbp": 300,
+            "feeGbp": 0.99,
+            "netGbp": 300,
+            "lkrReceived": 134450.42,
+            "effectiveRate": 446.69397654407123,
+            "behindBoardRate": 1.4740947559287747
+          },
+          {
+            "amountGbp": 500,
+            "feeGbp": 0.99,
+            "netGbp": 500,
+            "lkrReceived": 224084.04,
+            "effectiveRate": 447.28246072775903,
+            "behindBoardRate": 0.885610572240978
+          },
+          {
+            "amountGbp": 1000,
+            "feeGbp": 0.99,
+            "netGbp": 1000,
+            "lkrReceived": 448168.07,
+            "effectiveRate": 447.72482242579844,
+            "behindBoardRate": 0.4432488742015721
+          },
+          {
+            "amountGbp": 2000,
+            "feeGbp": 0.99,
+            "netGbp": 2000,
+            "lkrReceived": 896336.14,
+            "effectiveRate": 447.94633656340113,
+            "behindBoardRate": 0.22173473659887577
+          },
+          {
+            "amountGbp": 2500,
+            "feeGbp": 0.99,
+            "netGbp": 2500,
+            "lkrReceived": 1120420.18,
+            "effectiveRate": 447.99066769559255,
+            "behindBoardRate": 0.17740360440745917
+          },
+          {
+            "amountGbp": 5000,
+            "feeGbp": 0.99,
+            "netGbp": 5000,
+            "lkrReceived": 2240840.36,
+            "effectiveRate": 448.0793522882469,
+            "behindBoardRate": 0.08871901175308494
+          },
+          {
+            "amountGbp": 10000,
+            "feeGbp": 0.99,
+            "netGbp": 10000,
+            "lkrReceived": 4481680.71,
+            "effectiveRate": 448.12370675303146,
+            "behindBoardRate": 0.04436454696855208
+          },
+          {
+            "amountGbp": 15000,
+            "feeGbp": 0.99,
+            "netGbp": 15000,
+            "lkrReceived": 6722521.07,
+            "effectiveRate": 448.1384941927166,
+            "behindBoardRate": 0.02957710728338725
+          },
+          {
+            "amountGbp": 20000,
+            "feeGbp": 0.99,
+            "netGbp": 20000,
+            "lkrReceived": 8963361.43,
+            "effectiveRate": 448.14588827853015,
+            "behindBoardRate": 0.022183021469857067
+          },
+          {
+            "amountGbp": 25000,
+            "feeGbp": 0.99,
+            "netGbp": 25000,
+            "lkrReceived": 11204201.78,
+            "effectiveRate": 448.15032444715183,
+            "behindBoardRate": 0.017746852848176786
+          },
+          {
+            "amountGbp": 50000,
+            "feeGbp": 0.99,
+            "netGbp": 50000,
+            "lkrReceived": 22408403.57,
+            "effectiveRate": 448.15919784788264,
+            "behindBoardRate": 0.008873452117370562
+          },
+          {
+            "amountGbp": 100000,
+            "feeGbp": 0.99,
+            "netGbp": 100000,
+            "lkrReceived": 44816807.13,
+            "effectiveRate": 448.16363448001863,
+            "behindBoardRate": 0.004436819981378903
+          }
+        ]
+      }
     },
     {
       "id": "wu-cash-pickup-sl",
       "name": "WU (cash pickup SL)",
-      "wired": false,
-      "sourceUrl": null,
-      "status": "not_wired",
-      "updatedAt": null,
+      "wired": true,
+      "sourceUrl": "https://www.westernunion.com/gb/en/web/send-money/start",
+      "status": "ok",
+      "updatedAt": "2026-08-19T17:16:40.115Z",
       "error": null,
-      "snapshot": null
+      "snapshot": {
+        "id": "wu-cash-pickup-sl",
+        "name": "WU (cash pickup SL)",
+        "sourceUrl": "https://www.westernunion.com/gb/en/web/send-money/start",
+        "pair": "GBPLKR",
+        "boardRate": 421.781385,
+        "rateKind": "send",
+        "asOf": "19/08/2026",
+        "quotes": [
+          {
+            "amountGbp": 300,
+            "feeGbp": 2.99,
+            "netGbp": 300,
+            "lkrReceived": 126534.42,
+            "effectiveRate": 417.61912934420275,
+            "behindBoardRate": 4.162255655797253
+          },
+          {
+            "amountGbp": 500,
+            "feeGbp": 2.99,
+            "netGbp": 500,
+            "lkrReceived": 210890.69,
+            "effectiveRate": 419.27412075786793,
+            "behindBoardRate": 2.5072642421320666
+          },
+          {
+            "amountGbp": 1000,
+            "feeGbp": 4.99,
+            "netGbp": 1000,
+            "lkrReceived": 424922.31,
+            "effectiveRate": 422.8124757460273,
+            "behindBoardRate": 2.1098344539727236
+          },
+          {
+            "amountGbp": 2000,
+            "feeGbp": 4.99,
+            "netGbp": 2000,
+            "lkrReceived": 856126.47,
+            "effectiveRate": 426.99787530112366,
+            "behindBoardRate": 1.06536009887634
+          },
+          {
+            "amountGbp": 2500,
+            "feeGbp": 4.99,
+            "netGbp": 2500,
+            "lkrReceived": 1070158.09,
+            "effectiveRate": 427.21052379450623,
+            "behindBoardRate": 0.8527116054937665
+          },
+          {
+            "amountGbp": 5000,
+            "feeGbp": 4.99,
+            "netGbp": 5000,
+            "lkrReceived": 2140316.18,
+            "effectiveRate": 427.6364548180916,
+            "behindBoardRate": 0.4267805819084174
+          },
+          {
+            "amountGbp": 10000,
+            "feeGbp": 4.99,
+            "netGbp": 10000,
+            "lkrReceived": 4280632.35,
+            "effectiveRate": 427.8497379807476,
+            "behindBoardRate": 0.2134974192524055
+          },
+          {
+            "amountGbp": 15000,
+            "feeGbp": 4.99,
+            "netGbp": 15000,
+            "lkrReceived": 6420948.53,
+            "effectiveRate": 427.9208803204801,
+            "behindBoardRate": 0.14235507951991622
+          },
+          {
+            "amountGbp": 20000,
+            "feeGbp": 4.99,
+            "netGbp": 20000,
+            "lkrReceived": 8561264.71,
+            "effectiveRate": 427.9564603631394,
+            "behindBoardRate": 0.10677503686059708
+          },
+          {
+            "amountGbp": 25000,
+            "feeGbp": 4.99,
+            "netGbp": 25000,
+            "lkrReceived": 10701580.89,
+            "effectiveRate": 427.9778112288787,
+            "behindBoardRate": 0.08542417112130352
+          },
+          {
+            "amountGbp": 50000,
+            "feeGbp": 4.99,
+            "netGbp": 50000,
+            "lkrReceived": 21403161.77,
+            "effectiveRate": 428.0205189522086,
+            "behindBoardRate": 0.042716447791406154
+          },
+          {
+            "amountGbp": 100000,
+            "feeGbp": 4.99,
+            "netGbp": 100000,
+            "lkrReceived": 42806323.54,
+            "effectiveRate": 428.0418761103821,
+            "behindBoardRate": 0.02135928961791933
+          }
+        ]
+      }
     },
     {
       "id": "ria-money-transfer",
       "name": "Ria Money Transfer",
-      "wired": false,
-      "sourceUrl": null,
-      "status": "not_wired",
-      "updatedAt": null,
+      "wired": true,
+      "sourceUrl": "https://www.riamoneytransfer.com/en-gb",
+      "status": "ok",
+      "updatedAt": "2026-08-19T17:16:41.229Z",
       "error": null,
-      "snapshot": null
+      "snapshot": {
+        "id": "ria-money-transfer",
+        "name": "Ria Money Transfer",
+        "sourceUrl": "https://www.riamoneytransfer.com/en-gb",
+        "pair": "GBPLKR",
+        "boardRate": 448,
+        "rateKind": "send",
+        "asOf": "19/08/2026",
+        "quotes": [
+          {
+            "amountGbp": 300,
+            "feeGbp": 0,
+            "netGbp": 300,
+            "lkrReceived": 134400,
+            "effectiveRate": 448,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 500,
+            "feeGbp": 0,
+            "netGbp": 500,
+            "lkrReceived": 224000,
+            "effectiveRate": 448,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 1000,
+            "feeGbp": 0,
+            "netGbp": 1000,
+            "lkrReceived": 448000,
+            "effectiveRate": 448,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 2000,
+            "feeGbp": 0,
+            "netGbp": 2000,
+            "lkrReceived": 896000,
+            "effectiveRate": 448,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 2500,
+            "feeGbp": 0,
+            "netGbp": 2500,
+            "lkrReceived": 1120000,
+            "effectiveRate": 448,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 5000,
+            "feeGbp": 0,
+            "netGbp": 5000,
+            "lkrReceived": 2240000,
+            "effectiveRate": 448,
+            "behindBoardRate": 0
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      }
     }
   ]
 }

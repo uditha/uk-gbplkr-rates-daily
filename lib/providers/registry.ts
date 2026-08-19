@@ -35,6 +35,21 @@ import {
   REMITLY_RATES_URL,
   fetchRemitlySnapshot,
 } from "./remitly";
+import {
+  WU_BANK_PROVIDER_ID,
+  WU_BANK_PROVIDER_NAME,
+  WU_CASH_PROVIDER_ID,
+  WU_CASH_PROVIDER_NAME,
+  WU_RATES_URL,
+  fetchWuBankSnapshot,
+  fetchWuCashSnapshot,
+} from "./western-union";
+import {
+  RIA_PROVIDER_ID,
+  RIA_PROVIDER_NAME,
+  RIA_RATES_URL,
+  fetchRiaSnapshot,
+} from "./ria";
 
 export type ProviderDefinition = {
   id: string;
@@ -81,22 +96,22 @@ export const PROVIDER_REGISTRY: ProviderDefinition[] = [
     fetchSnapshot: fetchRemitlySnapshot,
   },
   {
-    id: "western-union-bank",
-    name: "Western Union (bank)",
-    sourceUrl: null,
-    fetchSnapshot: null,
+    id: WU_BANK_PROVIDER_ID,
+    name: WU_BANK_PROVIDER_NAME,
+    sourceUrl: WU_RATES_URL,
+    fetchSnapshot: fetchWuBankSnapshot,
   },
   {
-    id: "wu-cash-pickup-sl",
-    name: "WU (cash pickup SL)",
-    sourceUrl: null,
-    fetchSnapshot: null,
+    id: WU_CASH_PROVIDER_ID,
+    name: WU_CASH_PROVIDER_NAME,
+    sourceUrl: WU_RATES_URL,
+    fetchSnapshot: fetchWuCashSnapshot,
   },
   {
-    id: "ria-money-transfer",
-    name: "Ria Money Transfer",
-    sourceUrl: null,
-    fetchSnapshot: null,
+    id: RIA_PROVIDER_ID,
+    name: RIA_PROVIDER_NAME,
+    sourceUrl: RIA_RATES_URL,
+    fetchSnapshot: fetchRiaSnapshot,
   },
 ];
 

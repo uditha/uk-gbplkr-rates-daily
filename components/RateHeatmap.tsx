@@ -1,6 +1,7 @@
 import { colorForBehind, heatmapGradient } from "@/lib/heatmap";
 import { WISE_PROVIDER_ID } from "@/lib/providers/wise";
 import { REVOLUT_PROVIDER_ID } from "@/lib/providers/revolut";
+import { RIA_PROVIDER_ID } from "@/lib/providers/ria";
 import type { ComparisonRates, Quote } from "@/lib/providers/types";
 
 function formatRate(rate: number) {
@@ -69,7 +70,9 @@ export function RateHeatmap({ data }: { data: ComparisonRates }) {
                         provider.id === WISE_PROVIDER_ID ||
                         provider.id === REVOLUT_PROVIDER_ID
                           ? "max 5M"
-                          : "n/a"
+                          : provider.id === RIA_PROVIDER_ID
+                            ? "max 8k"
+                            : "n/a"
                       }
                     />
                   );
@@ -95,6 +98,12 @@ export function RateHeatmap({ data }: { data: ComparisonRates }) {
   );
 }
 
+function unavailableReason(caption: string) {
+  if (caption === "max 5M") return "over the 5 million LKR send limit";
+  if (caption === "max 8k") return "over Ria’s £8,000 send limit";
+  return "no quote";
+}
+
 function UnavailableCell({
   label,
   providerName,
@@ -106,7 +115,7 @@ function UnavailableCell({
 }) {
   return (
     <div
-      title={`${providerName} £${label}: ${caption === "max 5M" ? "over Wise’s 5 million LKR send limit" : "no quote"}`}
+      title={`${providerName} £${label}: ${unavailableReason(caption)}`}
       className="flex h-full min-h-0 flex-col items-center justify-center rounded-md bg-zinc-100 px-1 py-1.5 text-center text-zinc-400"
     >
       <span className="font-mono text-[13px] font-semibold tabular-nums leading-none sm:text-sm">
