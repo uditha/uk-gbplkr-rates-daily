@@ -44,12 +44,12 @@ export function RateHeatmap({ data }: { data: ComparisonRates }) {
   });
 
   return (
-    <div className="flex h-full min-h-0 min-w-0 w-full items-stretch gap-3 overflow-hidden">
+    <div className="flex h-full min-h-0 min-w-0 w-full items-stretch gap-2 overflow-hidden">
       <div className="min-h-0 min-w-0 flex-1 overflow-hidden">
         <div
           className="grid h-full w-full gap-1 overflow-hidden"
           style={{
-            gridTemplateColumns: `clamp(7.5rem, 16vw, 9.75rem) repeat(${data.amounts.length}, minmax(0, 1fr))`,
+            gridTemplateColumns: `12.5rem repeat(${data.amounts.length}, minmax(0, 1fr))`,
             gridTemplateRows: `1.5rem repeat(${data.providers.length}, minmax(0, 1fr))`,
           }}
         >
@@ -197,11 +197,11 @@ function HeatmapCell({
 
 function HeatmapLegend() {
   return (
-    <div className="hidden h-full min-h-0 w-[6.5rem] shrink-0 overflow-hidden pr-1 sm:flex sm:flex-col">
-      <p className="mb-2 text-[11px] leading-tight text-zinc-500">
-        Green is the best rate in that column
+    <div className="flex h-full min-h-0 w-[4.75rem] shrink-0 flex-col overflow-hidden pl-1">
+      <p className="mb-2 text-[10px] leading-tight text-zinc-500">
+        Best in column
       </p>
-      <div className="flex min-h-0 flex-1 items-stretch gap-2 overflow-hidden">
+      <div className="flex min-h-0 flex-1 items-stretch gap-1.5 overflow-hidden">
         <div
           className="w-2.5 rounded-full"
           style={{ background: heatmapGradient() }}
