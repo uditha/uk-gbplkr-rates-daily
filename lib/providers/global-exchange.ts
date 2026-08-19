@@ -90,6 +90,11 @@ export async function fetchGlobalExchangeHtml(): Promise<string> {
   });
 
   if (!response.ok) {
+    if (response.status === 403) {
+      throw new Error(
+        "Their site blocked the server (403). Open the Sri Lanka page and save the 1 GBP = LKR rate below.",
+      );
+    }
     throw new Error(`Global Exchange Sri Lanka page returned ${response.status}`);
   }
 

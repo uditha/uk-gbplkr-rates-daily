@@ -1,4 +1,10 @@
 import { getProviderDefinition, getWiredProviders } from "@/lib/providers/registry";
+import {
+  GLOBAL_EXCHANGE_PROVIDER_ID,
+  GLOBAL_EXCHANGE_PROVIDER_NAME,
+  GLOBAL_EXCHANGE_RATES_URL,
+  buildGlobalExchangeSnapshot,
+} from "@/lib/providers/global-exchange";
 import { loadStore, saveProviderRecord } from "@/lib/store/rates-store";
 import type { ProviderRecord, RatesStoreState } from "@/lib/store/types";
 
@@ -44,6 +50,33 @@ export async function refreshProvider(providerId: string): Promise<ProviderRecor
     await saveProviderRecord(record);
     throw error;
   }
+}
+
+export async function applyManualSendRate(
+  providerId: string,
+  sendRate: number,
+): Promise<ProviderRecord> {
+  if (providerId !== GLOBAL_EXCHANGE_PROVIDER_ID) {
+    throw new Error("Manual rate entry is only set up for Global Exchange");
+  }
+  if (!Number.isFinite(sendRate) || sendRate <= 0 || sendRate > 1000) {
+    throw new Error("Enter the published 1 GBP = LKR figure, for example 451");
+  }
+
+  const asOf = new Date().toLocaleDateString("en-GB");
+  const snapshot = buildGlobalExchangeSnapshot(sendRate, asOf);
+  const record: ProviderRecord = {
+    id: GLOBAL_EXCHANGE_PROVIDER_ID,
+    name: GLOBAL_EXCHANGE_PROVIDER_NAME,
+    wired: true,
+    sourceUrl: GLOBAL_EXCHANGE_RATES_URL,
+    status: "ok",
+    updatedAt: new Date().toISOString(),
+    error: null,
+    snapshot,
+  };
+  await saveProviderRecord(record);
+  return record;
 }
 
 export async function refreshWiredProviders(): Promise<RatesStoreState> {

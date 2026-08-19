@@ -1,5 +1,9 @@
 import { loadStore } from "@/lib/store/rates-store";
-import { refreshProvider, refreshWiredProviders } from "@/lib/store/refresh";
+import {
+  applyManualSendRate,
+  refreshProvider,
+  refreshWiredProviders,
+} from "@/lib/store/refresh";
 
 export const dynamic = "force-dynamic";
 
@@ -10,7 +14,10 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as { providerId?: string };
+    const body = (await request.json()) as {
+      providerId?: string;
+      sendRate?: number;
+    };
     const providerId = body.providerId;
 
     if (!providerId || providerId === "all") {
@@ -18,7 +25,10 @@ export async function POST(request: Request) {
       return Response.json({ state });
     }
 
-    const record = await refreshProvider(providerId);
+    const record =
+      body.sendRate != null
+        ? await applyManualSendRate(providerId, Number(body.sendRate))
+        : await refreshProvider(providerId);
     const state = await loadStore();
     return Response.json({ state, record });
   } catch (error) {
