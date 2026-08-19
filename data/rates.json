@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-19T16:12:56.943Z",
+  "updatedAt": "2026-08-19T16:20:22.633Z",
   "providers": [
     {
       "id": "remitwire-boc-uk",
@@ -514,12 +514,118 @@
     {
       "id": "remitly-standard",
       "name": "Remitly (standard)",
-      "wired": false,
-      "sourceUrl": null,
-      "status": "not_wired",
-      "updatedAt": null,
+      "wired": true,
+      "sourceUrl": "https://www.remitly.com/gb/en/sri-lanka",
+      "status": "ok",
+      "updatedAt": "2026-08-19T16:20:22.633Z",
       "error": null,
-      "snapshot": null
+      "snapshot": {
+        "id": "remitly-standard",
+        "name": "Remitly (standard)",
+        "sourceUrl": "https://www.remitly.com/gb/en/sri-lanka",
+        "pair": "GBPLKR",
+        "boardRate": 460.51,
+        "rateKind": "send",
+        "asOf": "19/08/2026",
+        "quotes": [
+          {
+            "amountGbp": 300,
+            "feeGbp": 0,
+            "netGbp": 300,
+            "lkrReceived": 138153,
+            "effectiveRate": 460.51,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 500,
+            "feeGbp": 0,
+            "netGbp": 500,
+            "lkrReceived": 230255,
+            "effectiveRate": 460.51,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 1000,
+            "feeGbp": 0,
+            "netGbp": 1000,
+            "lkrReceived": 454895,
+            "effectiveRate": 454.895,
+            "behindBoardRate": 5.615000000000009
+          },
+          {
+            "amountGbp": 2000,
+            "feeGbp": 0,
+            "netGbp": 2000,
+            "lkrReceived": 904175,
+            "effectiveRate": 452.0875,
+            "behindBoardRate": 8.422500000000014
+          },
+          {
+            "amountGbp": 2500,
+            "feeGbp": 0,
+            "netGbp": 2500,
+            "lkrReceived": 1128815,
+            "effectiveRate": 451.526,
+            "behindBoardRate": 8.98399999999998
+          },
+          {
+            "amountGbp": 5000,
+            "feeGbp": 0,
+            "netGbp": 5000,
+            "lkrReceived": 2252015,
+            "effectiveRate": 450.403,
+            "behindBoardRate": 10.106999999999971
+          },
+          {
+            "amountGbp": 10000,
+            "feeGbp": 0,
+            "netGbp": 10000,
+            "lkrReceived": 4498415,
+            "effectiveRate": 449.8415,
+            "behindBoardRate": 10.668499999999995
+          },
+          {
+            "amountGbp": 15000,
+            "feeGbp": 0,
+            "netGbp": 15000,
+            "lkrReceived": 6744815,
+            "effectiveRate": 449.65433333333334,
+            "behindBoardRate": 10.85566666666665
+          },
+          {
+            "amountGbp": 20000,
+            "feeGbp": 0,
+            "netGbp": 20000,
+            "lkrReceived": 8991215,
+            "effectiveRate": 449.56075,
+            "behindBoardRate": 10.949250000000006
+          },
+          {
+            "amountGbp": 25000,
+            "feeGbp": 0,
+            "netGbp": 25000,
+            "lkrReceived": 11237615,
+            "effectiveRate": 449.5046,
+            "behindBoardRate": 11.005400000000009
+          },
+          {
+            "amountGbp": 50000,
+            "feeGbp": 0,
+            "netGbp": 50000,
+            "lkrReceived": 22469615,
+            "effectiveRate": 449.3923,
+            "behindBoardRate": 11.117700000000013
+          },
+          {
+            "amountGbp": 100000,
+            "feeGbp": 0,
+            "netGbp": 100000,
+            "lkrReceived": 44933615,
+            "effectiveRate": 449.33615,
+            "behindBoardRate": 11.173850000000016
+          }
+        ]
+      }
     },
     {
       "id": "western-union-bank",
