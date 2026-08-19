@@ -50,7 +50,8 @@ export function RateHeatmap({ data }: { data: ComparisonRates }) {
                   {provider.name}
                 </span>
                 <span className="mt-1 font-mono text-[10px] tabular-nums text-zinc-500">
-                  {formatRate(provider.boardRate)} buy
+                  {formatRate(provider.boardRate)}
+                  {provider.rateKind === "buying" ? " buy" : ""}
                   {provider.asOf ? ` · ${provider.asOf}` : ""}
                 </span>
               </div>
@@ -124,7 +125,7 @@ function HeatmapLegend() {
   return (
     <div className="hidden h-full min-h-0 shrink-0 sm:flex sm:flex-col">
       <p className="mb-2 max-w-[7.5rem] text-[11px] leading-tight text-zinc-500">
-        LKR per £1 behind the quoted buying rate
+        LKR per £1 behind the leader
       </p>
       <div className="flex min-h-0 flex-1 items-stretch gap-2">
         <div

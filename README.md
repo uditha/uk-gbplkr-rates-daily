@@ -16,7 +16,15 @@ npm run refresh remitwire-boc-uk # one provider
 3. `LKR received = (amount − fee) × buying rate`
 4. `Effective rate = LKR received ÷ amount`
 
-Other providers are listed in admin as not wired yet.
+## Global Exchange
+
+1. Read **1 GBP = … LKR** from [globalexchange.co.uk/Send-Money-to-SriLanka](https://www.globalexchange.co.uk/Send-Money-to-SriLanka)
+2. Fees are not applied yet (waiting on charge bands)
+3. For now `LKR received = amount × send rate`
+
+```bash
+npm run refresh global-exchange-smart
+```
 
 ## Local development
 

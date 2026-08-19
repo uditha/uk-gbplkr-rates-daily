@@ -5,6 +5,12 @@ import {
   BOC_UK_RATES_URL,
   fetchBocUkSnapshot,
 } from "./boc-uk";
+import {
+  GLOBAL_EXCHANGE_PROVIDER_ID,
+  GLOBAL_EXCHANGE_PROVIDER_NAME,
+  GLOBAL_EXCHANGE_RATES_URL,
+  fetchGlobalExchangeSnapshot,
+} from "./global-exchange";
 
 export type ProviderDefinition = {
   id: string;
@@ -21,10 +27,10 @@ export const PROVIDER_REGISTRY: ProviderDefinition[] = [
     fetchSnapshot: fetchBocUkSnapshot,
   },
   {
-    id: "global-exchange-smart",
-    name: "Global Exchange (Smart)",
-    sourceUrl: null,
-    fetchSnapshot: null,
+    id: GLOBAL_EXCHANGE_PROVIDER_ID,
+    name: GLOBAL_EXCHANGE_PROVIDER_NAME,
+    sourceUrl: GLOBAL_EXCHANGE_RATES_URL,
+    fetchSnapshot: fetchGlobalExchangeSnapshot,
   },
   {
     id: "wise",

@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-19T14:29:14.193Z",
+  "updatedAt": "2026-08-19T15:24:33.496Z",
   "providers": [
     {
       "id": "remitwire-boc-uk",
@@ -120,12 +120,118 @@
     {
       "id": "global-exchange-smart",
       "name": "Global Exchange (Smart)",
-      "wired": false,
-      "sourceUrl": null,
-      "status": "not_wired",
-      "updatedAt": null,
+      "wired": true,
+      "sourceUrl": "https://www.globalexchange.co.uk/Send-Money-to-SriLanka",
+      "status": "ok",
+      "updatedAt": "2026-08-19T15:24:33.496Z",
       "error": null,
-      "snapshot": null
+      "snapshot": {
+        "id": "global-exchange-smart",
+        "name": "Global Exchange (Smart)",
+        "sourceUrl": "https://www.globalexchange.co.uk/Send-Money-to-SriLanka",
+        "pair": "GBPLKR",
+        "boardRate": 451,
+        "rateKind": "send",
+        "asOf": null,
+        "quotes": [
+          {
+            "amountGbp": 300,
+            "feeGbp": 0,
+            "netGbp": 300,
+            "lkrReceived": 135300,
+            "effectiveRate": 451,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 500,
+            "feeGbp": 0,
+            "netGbp": 500,
+            "lkrReceived": 225500,
+            "effectiveRate": 451,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 1000,
+            "feeGbp": 0,
+            "netGbp": 1000,
+            "lkrReceived": 451000,
+            "effectiveRate": 451,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 2000,
+            "feeGbp": 0,
+            "netGbp": 2000,
+            "lkrReceived": 902000,
+            "effectiveRate": 451,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 2500,
+            "feeGbp": 0,
+            "netGbp": 2500,
+            "lkrReceived": 1127500,
+            "effectiveRate": 451,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 5000,
+            "feeGbp": 0,
+            "netGbp": 5000,
+            "lkrReceived": 2255000,
+            "effectiveRate": 451,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 10000,
+            "feeGbp": 0,
+            "netGbp": 10000,
+            "lkrReceived": 4510000,
+            "effectiveRate": 451,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 15000,
+            "feeGbp": 0,
+            "netGbp": 15000,
+            "lkrReceived": 6765000,
+            "effectiveRate": 451,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 20000,
+            "feeGbp": 0,
+            "netGbp": 20000,
+            "lkrReceived": 9020000,
+            "effectiveRate": 451,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 25000,
+            "feeGbp": 0,
+            "netGbp": 25000,
+            "lkrReceived": 11275000,
+            "effectiveRate": 451,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 50000,
+            "feeGbp": 0,
+            "netGbp": 50000,
+            "lkrReceived": 22550000,
+            "effectiveRate": 451,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 100000,
+            "feeGbp": 0,
+            "netGbp": 100000,
+            "lkrReceived": 45100000,
+            "effectiveRate": 451,
+            "behindBoardRate": 0
+          }
+        ]
+      }
     },
     {
       "id": "wise",

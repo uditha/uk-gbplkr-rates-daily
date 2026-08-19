@@ -18,7 +18,7 @@ export type ProviderSnapshot = {
   sourceUrl: string;
   pair: "GBPLKR";
   boardRate: number;
-  rateKind: "buying";
+  rateKind: "buying" | "send";
   asOf: string | null;
   quotes: Quote[];
 };
