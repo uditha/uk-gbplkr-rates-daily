@@ -1,14 +1,20 @@
 export const HEATMAP_STOPS: { at: number; rgb: [number, number, number] }[] = [
-  { at: 0, rgb: [74, 222, 128] },
-  { at: 0.5, rgb: [163, 230, 53] },
-  { at: 1, rgb: [250, 204, 21] },
-  { at: 2, rgb: [251, 146, 60] },
-  { at: 4, rgb: [244, 114, 182] },
-  { at: 6, rgb: [168, 85, 247] },
-  { at: 8, rgb: [76, 29, 149] },
+  { at: 0, rgb: [2, 122, 72] },
+  { at: 1, rgb: [106, 196, 107] },
+  { at: 2, rgb: [232, 213, 148] },
+  { at: 4, rgb: [232, 140, 78] },
+  { at: 8, rgb: [153, 32, 48] },
 ];
 
 export const HEATMAP_MAX = 8;
+
+export const HEATMAP_TICKS: { value: number; label: string }[] = [
+  { value: 0, label: "Best" },
+  { value: 1, label: "1" },
+  { value: 2, label: "2" },
+  { value: 4, label: "4" },
+  { value: 8, label: "Worse" },
+];
 
 function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t;
@@ -18,12 +24,23 @@ function rgbString(r: number, g: number, b: number) {
   return `rgb(${Math.round(r)} ${Math.round(g)} ${Math.round(b)})`;
 }
 
-export function colorForBehind(behind: number) {
-  const x = Math.min(Math.max(behind, 0), HEATMAP_MAX);
+function clampBehind(behind: number) {
+  if (!Number.isFinite(behind) || behind < 0) return 0;
+  return Math.min(behind, HEATMAP_MAX);
+}
+
+function stopIndexFor(behind: number) {
+  const last = HEATMAP_STOPS.length - 2;
   let i = 0;
-  while (i < HEATMAP_STOPS.length - 2 && x > HEATMAP_STOPS[i + 1].at) {
+  while (i < last && behind > HEATMAP_STOPS[i + 1].at) {
     i += 1;
   }
+  return i;
+}
+
+export function colorForBehind(behind: number) {
+  const x = clampBehind(behind);
+  const i = stopIndexFor(x);
   const start = HEATMAP_STOPS[i];
   const end = HEATMAP_STOPS[i + 1];
   const t = (x - start.at) / (end.at - start.at || 1);
@@ -34,7 +51,7 @@ export function colorForBehind(behind: number) {
 
   return {
     background: rgbString(r, g, b),
-    color: luminance > 0.55 ? "#171717" : "#ffffff",
+    color: luminance > 0.55 ? "#14532d" : "#ffffff",
   };
 }
 

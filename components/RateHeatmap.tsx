@@ -1,4 +1,9 @@
-import { colorForBehind, heatmapGradient } from "@/lib/heatmap";
+import {
+  HEATMAP_MAX,
+  HEATMAP_TICKS,
+  colorForBehind,
+  heatmapGradient,
+} from "@/lib/heatmap";
 import { WISE_PROVIDER_ID } from "@/lib/providers/wise";
 import { REVOLUT_PROVIDER_ID } from "@/lib/providers/revolut";
 import { RIA_PROVIDER_ID } from "@/lib/providers/ria";
@@ -30,7 +35,7 @@ export function RateHeatmap({ data }: { data: ComparisonRates }) {
     <div className="flex h-full min-h-0 w-full items-stretch gap-3">
       <div className="min-h-0 min-w-0 flex-1 overflow-auto">
         <div
-          className="grid h-full min-h-[12rem] min-w-[56rem] gap-px"
+          className="grid h-full min-h-[12rem] min-w-[56rem] gap-1"
           style={{
             gridTemplateColumns: `minmax(11rem, 13rem) repeat(${data.amounts.length}, minmax(0, 1fr))`,
             gridTemplateRows: `auto repeat(${data.providers.length}, minmax(4.5rem, 1fr))`,
@@ -147,13 +152,23 @@ function HeatmapCell({
       : quote.behindBoardRate
     ).toFixed(2),
   );
+  const isLeader = behind === 0;
   const { background, color } = colorForBehind(behind);
+  const rankHint = isLeader
+    ? "best in this column. "
+    : behind > 0
+      ? `${behind.toFixed(2)} LKR/£ behind the leader. `
+      : "";
 
   return (
     <div
-      title={`${providerName} £${label}: fee £${quote.feeGbp}, recipient ${formatLkr(quote.lkrReceived)} LKR, effective ${formatRate(quote.effectiveRate)}`}
-      className="flex h-full min-h-0 flex-col items-center justify-center rounded-md px-1 py-1.5 text-center"
-      style={{ background, color }}
+      title={`${providerName} £${label}: ${rankHint}fee £${quote.feeGbp}, recipient ${formatLkr(quote.lkrReceived)} LKR, effective ${formatRate(quote.effectiveRate)}`}
+      className="relative flex h-full min-h-0 flex-col items-center justify-center rounded-md px-1 py-1.5 text-center"
+      style={{
+        background,
+        color,
+        boxShadow: isLeader ? "inset 0 0 0 2px rgba(255,255,255,0.7)" : undefined,
+      }}
     >
       <span className="font-mono text-[13px] font-semibold tabular-nums leading-none sm:text-sm">
         {formatRate(quote.effectiveRate)}
@@ -166,31 +181,22 @@ function HeatmapCell({
 }
 
 function HeatmapLegend() {
-  const ticks = [
-    { value: 0, label: "0.0" },
-    { value: 0.5, label: "0.5" },
-    { value: 1, label: "1" },
-    { value: 2, label: "2" },
-    { value: 4, label: "4" },
-    { value: 8, label: "8+" },
-  ];
-
   return (
     <div className="hidden h-full min-h-0 shrink-0 sm:flex sm:flex-col">
       <p className="mb-2 max-w-[7.5rem] text-[11px] leading-tight text-zinc-500">
-        LKR per £1 behind the leader
+        Green is the best rate in that column
       </p>
       <div className="flex min-h-0 flex-1 items-stretch gap-2">
         <div
           className="w-3 rounded-sm"
           style={{ background: heatmapGradient() }}
         />
-        <div className="relative w-8">
-          {ticks.map((tick) => (
+        <div className="relative w-10">
+          {HEATMAP_TICKS.map((tick) => (
             <span
               key={tick.value}
               className="absolute left-0 -translate-y-1/2 font-mono text-[11px] tabular-nums text-zinc-500"
-              style={{ top: `${(tick.value / 8) * 100}%` }}
+              style={{ top: `${(tick.value / HEATMAP_MAX) * 100}%` }}
             >
               {tick.label}
             </span>
