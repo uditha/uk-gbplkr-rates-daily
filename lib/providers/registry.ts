@@ -17,6 +17,12 @@ import {
   WISE_RATES_URL,
   fetchWiseSnapshot,
 } from "./wise";
+import {
+  TAPTAP_PROVIDER_ID,
+  TAPTAP_PROVIDER_NAME,
+  TAPTAP_RATES_URL,
+  fetchTaptapSnapshot,
+} from "./taptap-send";
 
 export type ProviderDefinition = {
   id: string;
@@ -45,10 +51,10 @@ export const PROVIDER_REGISTRY: ProviderDefinition[] = [
     fetchSnapshot: fetchWiseSnapshot,
   },
   {
-    id: "taptap-send",
-    name: "Taptap Send",
-    sourceUrl: null,
-    fetchSnapshot: null,
+    id: TAPTAP_PROVIDER_ID,
+    name: TAPTAP_PROVIDER_NAME,
+    sourceUrl: TAPTAP_RATES_URL,
+    fetchSnapshot: fetchTaptapSnapshot,
   },
   {
     id: "revolut-standard",

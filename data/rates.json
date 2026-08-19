@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-19T15:56:16.459Z",
+  "updatedAt": "2026-08-19T16:04:54.683Z",
   "providers": [
     {
       "id": "remitwire-boc-uk",
@@ -317,12 +317,118 @@
     {
       "id": "taptap-send",
       "name": "Taptap Send",
-      "wired": false,
-      "sourceUrl": null,
-      "status": "not_wired",
-      "updatedAt": null,
+      "wired": true,
+      "sourceUrl": "https://www.taptapsend.com/en-gb/send-money-to/sri-lanka",
+      "status": "ok",
+      "updatedAt": "2026-08-19T16:04:54.683Z",
       "error": null,
-      "snapshot": null
+      "snapshot": {
+        "id": "taptap-send",
+        "name": "Taptap Send",
+        "sourceUrl": "https://www.taptapsend.com/en-gb/send-money-to/sri-lanka",
+        "pair": "GBPLKR",
+        "boardRate": 447.5,
+        "rateKind": "send",
+        "asOf": "19/08/2026",
+        "quotes": [
+          {
+            "amountGbp": 300,
+            "feeGbp": 0,
+            "netGbp": 300,
+            "lkrReceived": 134250,
+            "effectiveRate": 447.5,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 500,
+            "feeGbp": 0,
+            "netGbp": 500,
+            "lkrReceived": 223750,
+            "effectiveRate": 447.5,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 1000,
+            "feeGbp": 0,
+            "netGbp": 1000,
+            "lkrReceived": 447500,
+            "effectiveRate": 447.5,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 2000,
+            "feeGbp": 0,
+            "netGbp": 2000,
+            "lkrReceived": 895000,
+            "effectiveRate": 447.5,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 2500,
+            "feeGbp": 0,
+            "netGbp": 2500,
+            "lkrReceived": 1118750,
+            "effectiveRate": 447.5,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 5000,
+            "feeGbp": 0,
+            "netGbp": 5000,
+            "lkrReceived": 2237500,
+            "effectiveRate": 447.5,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 10000,
+            "feeGbp": 0,
+            "netGbp": 10000,
+            "lkrReceived": 4475000,
+            "effectiveRate": 447.5,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 15000,
+            "feeGbp": 0,
+            "netGbp": 15000,
+            "lkrReceived": 6712500,
+            "effectiveRate": 447.5,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 20000,
+            "feeGbp": 0,
+            "netGbp": 20000,
+            "lkrReceived": 8950000,
+            "effectiveRate": 447.5,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 25000,
+            "feeGbp": 0,
+            "netGbp": 25000,
+            "lkrReceived": 11187500,
+            "effectiveRate": 447.5,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 50000,
+            "feeGbp": 0,
+            "netGbp": 50000,
+            "lkrReceived": 22375000,
+            "effectiveRate": 447.5,
+            "behindBoardRate": 0
+          },
+          {
+            "amountGbp": 100000,
+            "feeGbp": 0,
+            "netGbp": 100000,
+            "lkrReceived": 44750000,
+            "effectiveRate": 447.5,
+            "behindBoardRate": 0
+          }
+        ]
+      }
     },
     {
       "id": "revolut-standard",

@@ -1,0 +1,30 @@
+{
+  "availableCountries": [
+    {
+      "isoCountryCode": "GB",
+      "countryDisplayName": "United Kingdom",
+      "currency": "GBP",
+      "corridors": [
+        {
+          "isoCountryCode": "LK",
+          "countryDisplayName": "Sri Lanka",
+          "currency": "LKR",
+          "currencyScale": 2,
+          "fxRate": "447.50"
+        },
+        {
+          "isoCountryCode": "PK",
+          "countryDisplayName": "Pakistan",
+          "currency": "PKR",
+          "currencyScale": 2,
+          "fxRate": "370.00",
+          "senderCurrencyFlatFee": "0.99",
+          "feeSchedule": {
+            "type": "standard",
+            "flatFee": "0.99"
+          }
+        }
+      ]
+    }
+  ]
+}
