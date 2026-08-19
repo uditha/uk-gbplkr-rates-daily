@@ -61,14 +61,7 @@ export function remitlyReceiveLkr(
   amountGbp: number,
   estimate: RemitlyEstimate,
 ): number {
-  const promoRate = estimate.promotionalRate;
-  const cap = estimate.promotionalCapGbp;
-  if (promoRate == null || cap == null || cap <= 0) {
-    return Number((amountGbp * estimate.baseRate).toFixed(2));
-  }
-  const promoPart = Math.min(amountGbp, cap);
-  const rest = Math.max(0, amountGbp - cap);
-  return Number((promoPart * promoRate + rest * estimate.baseRate).toFixed(2));
+  return Number((amountGbp * estimate.baseRate).toFixed(2));
 }
 
 export function parseRemitlyEstimate(payload: unknown): RemitlyEstimate {
@@ -129,7 +122,7 @@ export function quoteRemitlyAmount(
   const netGbp = amountGbp;
   const lkrReceived = remitlyReceiveLkr(amountGbp, estimate);
   const totalPaidGbp = remitlyTotalPaidGbp(amountGbp, estimate);
-  const boardRate = estimate.promotionalRate ?? estimate.baseRate;
+  const boardRate = estimate.baseRate;
   const effectiveRate = lkrReceived / totalPaidGbp;
 
   return {
@@ -151,7 +144,7 @@ export function buildRemitlySnapshot(
     name: REMITLY_PROVIDER_NAME,
     sourceUrl: REMITLY_RATES_URL,
     pair: "GBPLKR",
-    boardRate: estimate.promotionalRate ?? estimate.baseRate,
+    boardRate: estimate.baseRate,
     rateKind: "send",
     asOf,
     quotes: SEND_AMOUNTS.map((column) =>
@@ -168,7 +161,7 @@ async function fetchRemitlyEstimateOnce(amountGbp: number): Promise<Response> {
   url.searchParams.set("purpose", "OTHER");
   url.searchParams.set("customer_segment", "STANDARD");
   url.searchParams.set("customer_recognition", "UNRECOGNIZED");
-  url.searchParams.set("strict_promo", "false");
+  url.searchParams.set("strict_promo", "true");
 
   return fetch(url, {
     cache: "no-store",
@@ -199,10 +192,19 @@ export async function fetchRemitlyEstimate(
       throw new Error(`Remitly estimate returned ${response.status}`);
     }
     const estimate = parseRemitlyEstimate(await response.json());
-    const expected = remitlyReceiveLkr(estimate.sendAmount, estimate);
-    if (Math.abs(expected - estimate.receiveAmount) > 0.05) {
+    const expectedReceive = remitlyReceiveLkr(estimate.sendAmount, estimate);
+    if (Math.abs(expectedReceive - estimate.receiveAmount) > 0.05) {
       throw new Error(
-        `Remitly receive amount ${estimate.receiveAmount} did not match fee/promo formula ${expected}`,
+        `Remitly receive amount ${estimate.receiveAmount} did not match standard-rate formula ${expectedReceive}`,
+      );
+    }
+    const expectedCharge = remitlyTotalPaidGbp(
+      estimate.sendAmount,
+      estimate,
+    );
+    if (Math.abs(expectedCharge - estimate.totalChargeAmount) > 0.05) {
+      throw new Error(
+        `Remitly total charge ${estimate.totalChargeAmount} did not match send plus net fee ${expectedCharge}`,
       );
     }
     return estimate;

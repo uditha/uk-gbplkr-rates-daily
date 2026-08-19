@@ -7,20 +7,20 @@
       "target_currency": { "alpha3": "LKR" }
     },
     "discount": {
-      "fee_discount_amount": "1.49",
+      "fee_discount_amount": null,
       "send_discount_amount": "0.00"
     },
     "exchange_rate": {
       "base_rate": "449.28",
-      "capped_promotional_exchange_rate_amount": "500.00",
-      "promotional_exchange_rate": "460.51"
+      "capped_promotional_exchange_rate_amount": null,
+      "promotional_exchange_rate": null
     },
     "fee": {
       "total_fee_amount": "1.49"
     },
     "pay_in_method": "OPEN_BANKING",
-    "receive_amount": "138153.00",
+    "receive_amount": "134784.00",
     "send_amount": "300.00",
-    "total_charge_amount": "300.00"
+    "total_charge_amount": "301.49"
   }
 }
