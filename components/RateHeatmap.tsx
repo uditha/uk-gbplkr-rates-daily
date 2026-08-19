@@ -16,12 +16,13 @@ export function RateHeatmap() {
   const leaders = columnLeaders(PROVIDERS);
 
   return (
-    <div className="flex items-stretch gap-4">
-      <div className="min-w-0 flex-1 overflow-x-auto">
+    <div className="flex h-full min-h-0 w-full items-stretch gap-3">
+      <div className="min-h-0 min-w-0 flex-1 overflow-auto">
         <div
-          className="grid min-w-[56rem] gap-px"
+          className="grid h-full min-h-[28rem] min-w-[56rem] gap-px"
           style={{
-            gridTemplateColumns: `12.5rem repeat(${DATES.length}, minmax(4.4rem, 1fr))`,
+            gridTemplateColumns: `minmax(11rem, 13rem) repeat(${DATES.length}, minmax(0, 1fr))`,
+            gridTemplateRows: `auto repeat(${PROVIDERS.length}, minmax(0, 1fr))`,
           }}
         >
           <div />
@@ -45,7 +46,7 @@ export function RateHeatmap() {
                   return (
                     <div
                       key={`${provider.name}-${column}`}
-                      className="flex min-h-14 items-center justify-center rounded-md bg-zinc-100 text-sm text-zinc-400"
+                      className="flex h-full min-h-0 items-center justify-center rounded-md bg-zinc-100 text-sm text-zinc-400"
                     >
                       —
                     </div>
@@ -64,16 +65,16 @@ export function RateHeatmap() {
                         ? `${provider.name} led on ${DATES[column]} at ${formatRate(rate)} LKR per £1`
                         : `${formatRate(behind)} LKR per £1 behind the leader on ${DATES[column]}`
                     }
-                    className="flex min-h-14 flex-col items-center justify-center rounded-md px-1 py-1.5 text-center"
+                    className="flex h-full min-h-0 flex-col items-center justify-center rounded-md px-1 py-1.5 text-center"
                     style={{ background, color }}
                   >
-                    <span className="font-mono text-[13px] font-semibold tabular-nums leading-none">
+                    <span className="font-mono text-[13px] font-semibold tabular-nums leading-none sm:text-sm">
                       {formatRate(rate)}
                     </span>
                     <span
                       className={`mt-1 leading-none ${
                         isBest
-                          ? "text-[10px] font-bold tracking-wide"
+                          ? "text-[10px] font-bold tracking-wide sm:text-[11px]"
                           : "font-mono text-[11px] tabular-nums opacity-90"
                       }`}
                     >
@@ -103,16 +104,16 @@ function HeatmapLegend() {
   ];
 
   return (
-    <div className="hidden shrink-0 sm:flex sm:flex-col">
+    <div className="hidden h-full min-h-0 shrink-0 sm:flex sm:flex-col">
       <p className="mb-2 max-w-[7.5rem] text-[11px] leading-tight text-zinc-500">
         LKR per £1 behind the leader
       </p>
-      <div className="flex flex-1 items-stretch gap-2">
+      <div className="flex min-h-0 flex-1 items-stretch gap-2">
         <div
           className="w-3 rounded-sm"
           style={{ background: heatmapGradient() }}
         />
-        <div className="relative min-h-[18rem] w-8">
+        <div className="relative w-8">
           {ticks.map((tick) => (
             <span
               key={tick.value}
