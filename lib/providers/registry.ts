@@ -11,6 +11,12 @@ import {
   GLOBAL_EXCHANGE_RATES_URL,
   fetchGlobalExchangeSnapshot,
 } from "./global-exchange";
+import {
+  WISE_PROVIDER_ID,
+  WISE_PROVIDER_NAME,
+  WISE_RATES_URL,
+  fetchWiseSnapshot,
+} from "./wise";
 
 export type ProviderDefinition = {
   id: string;
@@ -33,10 +39,10 @@ export const PROVIDER_REGISTRY: ProviderDefinition[] = [
     fetchSnapshot: fetchGlobalExchangeSnapshot,
   },
   {
-    id: "wise",
-    name: "Wise",
-    sourceUrl: null,
-    fetchSnapshot: null,
+    id: WISE_PROVIDER_ID,
+    name: WISE_PROVIDER_NAME,
+    sourceUrl: WISE_RATES_URL,
+    fetchSnapshot: fetchWiseSnapshot,
   },
   {
     id: "taptap-send",
