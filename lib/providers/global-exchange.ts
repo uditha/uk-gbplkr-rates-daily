@@ -10,9 +10,11 @@ const USER_AGENT =
   "Mozilla/5.0 (compatible; uk-gbplkr-rates/1.0; +https://github.com/uditha/uk-gbplkr-rates-daily)";
 
 export function globalExchangeFeeGbp(amountGbp: number): number {
-  void amountGbp;
-  // Charge bands are not wired yet. Quotes use the published send rate only.
-  return 0;
+  if (amountGbp <= 0) {
+    throw new Error("Send amount must be positive");
+  }
+  if (amountGbp <= 1000) return 3;
+  return 5;
 }
 
 export function parseGlobalExchangeSriLankaPage(html: string): {
@@ -44,9 +46,10 @@ export function quoteGlobalExchangeAmount(
   sendRate: number,
 ): Quote {
   const feeGbp = globalExchangeFeeGbp(amountGbp);
-  const netGbp = amountGbp - feeGbp;
+  const netGbp = amountGbp;
   const lkrReceived = netGbp * sendRate;
-  const effectiveRate = lkrReceived / amountGbp;
+  const totalPaidGbp = amountGbp + feeGbp;
+  const effectiveRate = lkrReceived / totalPaidGbp;
 
   return {
     amountGbp,

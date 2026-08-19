@@ -5,6 +5,7 @@ import { describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
 import {
   buildGlobalExchangeSnapshot,
+  globalExchangeFeeGbp,
   parseGlobalExchangeSriLankaPage,
   quoteGlobalExchangeAmount,
 } from "./global-exchange";
@@ -22,13 +23,22 @@ describe("parseGlobalExchangeSriLankaPage", () => {
   });
 });
 
+describe("globalExchangeFeeGbp", () => {
+  it("charges £3 up to £1000 and £5 above that", () => {
+    assert.equal(globalExchangeFeeGbp(300), 3);
+    assert.equal(globalExchangeFeeGbp(1000), 3);
+    assert.equal(globalExchangeFeeGbp(1001), 5);
+    assert.equal(globalExchangeFeeGbp(100000), 5);
+  });
+});
+
 describe("quoteGlobalExchangeAmount", () => {
-  it("uses the send rate with no fee until charge bands are provided", () => {
+  it("converts the full send amount and adds the fee on top", () => {
     const quote = quoteGlobalExchangeAmount(1000, 451);
-    assert.equal(quote.feeGbp, 0);
+    assert.equal(quote.feeGbp, 3);
     assert.equal(quote.netGbp, 1000);
     assert.equal(quote.lkrReceived, 451000);
-    assert.equal(quote.effectiveRate, 451);
+    assert.equal(quote.effectiveRate, 451000 / 1003);
   });
 });
 
