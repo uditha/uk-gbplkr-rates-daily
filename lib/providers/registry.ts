@@ -29,6 +29,12 @@ import {
   REVOLUT_RATES_URL,
   fetchRevolutSnapshot,
 } from "./revolut";
+import {
+  REMITLY_PROVIDER_ID,
+  REMITLY_PROVIDER_NAME,
+  REMITLY_RATES_URL,
+  fetchRemitlySnapshot,
+} from "./remitly";
 
 export type ProviderDefinition = {
   id: string;
@@ -69,10 +75,10 @@ export const PROVIDER_REGISTRY: ProviderDefinition[] = [
     fetchSnapshot: fetchRevolutSnapshot,
   },
   {
-    id: "remitly-standard",
-    name: "Remitly (standard)",
-    sourceUrl: null,
-    fetchSnapshot: null,
+    id: REMITLY_PROVIDER_ID,
+    name: REMITLY_PROVIDER_NAME,
+    sourceUrl: REMITLY_RATES_URL,
+    fetchSnapshot: fetchRemitlySnapshot,
   },
   {
     id: "western-union-bank",
