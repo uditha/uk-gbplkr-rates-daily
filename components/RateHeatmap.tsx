@@ -8,6 +8,7 @@ import { WISE_PROVIDER_ID } from "@/lib/providers/wise";
 import { REVOLUT_PROVIDER_ID } from "@/lib/providers/revolut";
 import { RIA_PROVIDER_ID } from "@/lib/providers/ria";
 import type { ComparisonRates, Quote } from "@/lib/providers/types";
+import { ProviderLogo } from "@/components/ProviderLogo";
 
 function formatRate(rate: number) {
   return rate.toFixed(2);
@@ -37,7 +38,7 @@ export function RateHeatmap({ data }: { data: ComparisonRates }) {
         <div
           className="grid h-full min-h-[12rem] min-w-[56rem] gap-1"
           style={{
-            gridTemplateColumns: `minmax(11rem, 13rem) repeat(${data.amounts.length}, minmax(0, 1fr))`,
+            gridTemplateColumns: `minmax(14rem, 16.5rem) repeat(${data.amounts.length}, minmax(0, 1fr))`,
             gridTemplateRows: `auto repeat(${data.providers.length}, minmax(4.5rem, 1fr))`,
           }}
         >
@@ -53,15 +54,18 @@ export function RateHeatmap({ data }: { data: ComparisonRates }) {
 
           {data.providers.map((provider) => (
             <div key={provider.id} className="contents">
-              <div className="flex flex-col items-end justify-center pr-3 text-right">
-                <span className="text-[13px] font-medium leading-tight text-zinc-800">
-                  {provider.name}
-                </span>
-                <span className="mt-1 font-mono text-[10px] tabular-nums text-zinc-500">
-                  {formatRate(provider.boardRate)}
-                  {provider.rateKind === "buying" ? " buy" : ""}
-                  {provider.asOf ? ` · ${provider.asOf}` : ""}
-                </span>
+              <div className="flex items-center gap-2.5 pr-3">
+                <ProviderLogo id={provider.id} name={provider.name} />
+                <div className="min-w-0">
+                  <span className="block text-[13px] font-medium leading-tight text-zinc-800">
+                    {provider.name}
+                  </span>
+                  <span className="mt-1 block font-mono text-[10px] tabular-nums text-zinc-500">
+                    {formatRate(provider.boardRate)}
+                    {provider.rateKind === "buying" ? " buy" : ""}
+                    {provider.asOf ? ` · ${provider.asOf}` : ""}
+                  </span>
+                </div>
               </div>
               {data.amounts.map((amount, column) => {
                 const quote = provider.quotes[column] ?? null;

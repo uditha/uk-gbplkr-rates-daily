@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Fragment, useState } from "react";
 import { GLOBAL_EXCHANGE_PROVIDER_ID } from "@/lib/providers/global-exchange";
 import type { ProviderRecord, RatesStoreState } from "@/lib/store/types";
+import { ProviderLogo } from "@/components/ProviderLogo";
 
 function statusLabel(record: ProviderRecord) {
   if (record.status === "ok") return "Ready";
@@ -115,24 +116,29 @@ export function AdminPanel({ initialState }: { initialState: RatesStoreState }) 
               <Fragment key={record.id}>
                 <tr className="border-t border-zinc-200">
                   <td className="px-4 py-3">
-                    <div className="font-medium text-zinc-900">{record.name}</div>
-                    <div className="text-xs text-zinc-500">
-                      {record.sourceUrl ? (
-                        <a
-                          href={record.sourceUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="underline decoration-zinc-300 hover:text-zinc-800"
-                        >
-                          {record.sourceUrl}
-                        </a>
-                      ) : (
-                        "Source not wired yet"
-                      )}
+                    <div className="flex items-start gap-3">
+                      <ProviderLogo id={record.id} name={record.name} size={36} />
+                      <div className="min-w-0">
+                        <div className="font-medium text-zinc-900">{record.name}</div>
+                        <div className="text-xs text-zinc-500">
+                          {record.sourceUrl ? (
+                            <a
+                              href={record.sourceUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="underline decoration-zinc-300 hover:text-zinc-800"
+                            >
+                              {record.sourceUrl}
+                            </a>
+                          ) : (
+                            "Source not wired yet"
+                          )}
+                        </div>
+                        {record.error ? (
+                          <div className="mt-1 text-xs text-red-600">{record.error}</div>
+                        ) : null}
+                      </div>
                     </div>
-                    {record.error ? (
-                      <div className="mt-1 text-xs text-red-600">{record.error}</div>
-                    ) : null}
                   </td>
                   <td className="px-4 py-3 text-zinc-700">{statusLabel(record)}</td>
                   <td className="px-4 py-3 font-mono tabular-nums text-zinc-800">
