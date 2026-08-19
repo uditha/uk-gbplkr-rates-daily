@@ -33,34 +33,34 @@ export function RateHeatmap({ data }: { data: ComparisonRates }) {
   });
 
   return (
-    <div className="flex h-full min-h-0 w-full items-stretch gap-3">
+    <div className="flex h-full min-h-0 w-full items-stretch gap-4">
       <div className="min-h-0 min-w-0 flex-1 overflow-auto">
         <div
-          className="grid h-full min-h-[12rem] min-w-[56rem] gap-1"
+          className="grid h-full min-h-[12rem] min-w-[48rem] gap-x-1 gap-y-1.5"
           style={{
-            gridTemplateColumns: `minmax(14rem, 16.5rem) repeat(${data.amounts.length}, minmax(0, 1fr))`,
-            gridTemplateRows: `auto repeat(${data.providers.length}, minmax(4.5rem, 1fr))`,
+            gridTemplateColumns: `max-content repeat(${data.amounts.length}, minmax(4.25rem, 1fr))`,
+            gridTemplateRows: `auto repeat(${data.providers.length}, minmax(4.25rem, 1fr))`,
           }}
         >
-          <div />
+          <div className="sticky left-0 top-0 z-30 bg-white" />
           {data.amounts.map((amount) => (
             <div
               key={amount.amountGbp}
-              className="px-1 pb-2 text-center text-[11px] font-medium text-zinc-500"
+              className="sticky top-0 z-20 bg-white px-1 pb-2 text-center text-[11px] font-medium text-zinc-500"
             >
-              {amount.label}
+              £{amount.label}
             </div>
           ))}
 
           {data.providers.map((provider) => (
             <div key={provider.id} className="contents">
-              <div className="flex items-center gap-2.5 pr-3">
-                <ProviderLogo id={provider.id} name={provider.name} />
+              <div className="sticky left-0 z-10 flex max-w-[11.25rem] items-center gap-2 bg-white py-0.5 pr-2">
+                <ProviderLogo id={provider.id} name={provider.name} size={28} />
                 <div className="min-w-0">
-                  <span className="block text-[13px] font-medium leading-tight text-zinc-800">
+                  <span className="block text-[12px] font-medium leading-tight text-zinc-800">
                     {provider.name}
                   </span>
-                  <span className="mt-1 block font-mono text-[10px] tabular-nums text-zinc-500">
+                  <span className="mt-0.5 block font-mono text-[10px] tabular-nums text-zinc-500">
                     {formatRate(provider.boardRate)}
                     {provider.rateKind === "buying" ? " buy" : ""}
                     {provider.asOf ? ` · ${provider.asOf}` : ""}
@@ -125,7 +125,7 @@ function UnavailableCell({
   return (
     <div
       title={`${providerName} £${label}: ${unavailableReason(caption)}`}
-      className="flex h-full min-h-0 flex-col items-center justify-center rounded-md bg-zinc-100 px-1 py-1.5 text-center text-zinc-400"
+      className="flex h-full min-h-0 flex-col items-center justify-center rounded-lg bg-zinc-50 px-1 py-1.5 text-center text-zinc-400 ring-1 ring-zinc-100"
     >
       <span className="font-mono text-[13px] font-semibold tabular-nums leading-none sm:text-sm">
         —
@@ -167,7 +167,7 @@ function HeatmapCell({
   return (
     <div
       title={`${providerName} £${label}: ${rankHint}fee £${quote.feeGbp}, recipient ${formatLkr(quote.lkrReceived)} LKR, effective ${formatRate(quote.effectiveRate)}`}
-      className="relative flex h-full min-h-0 flex-col items-center justify-center rounded-md px-1 py-1.5 text-center"
+      className="relative flex h-full min-h-0 flex-col items-center justify-center rounded-lg px-1 py-1.5 text-center"
       style={{
         background,
         color,
@@ -186,13 +186,13 @@ function HeatmapCell({
 
 function HeatmapLegend() {
   return (
-    <div className="hidden h-full min-h-0 shrink-0 sm:flex sm:flex-col">
-      <p className="mb-2 max-w-[7.5rem] text-[11px] leading-tight text-zinc-500">
+    <div className="hidden h-full min-h-0 shrink-0 pr-1 sm:flex sm:flex-col">
+      <p className="mb-2 max-w-[7rem] text-[11px] leading-tight text-zinc-500">
         Green is the best rate in that column
       </p>
       <div className="flex min-h-0 flex-1 items-stretch gap-2">
         <div
-          className="w-3 rounded-sm"
+          className="w-2.5 rounded-full"
           style={{ background: heatmapGradient() }}
         />
         <div className="relative w-10">
