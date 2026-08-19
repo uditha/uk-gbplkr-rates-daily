@@ -4,11 +4,13 @@ import { dirname, join } from "node:path";
 import { describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
 import {
+  WISE_MAX_LKR_RECEIVED,
   buildWiseSnapshot,
   formatWiseAsOf,
   parseWiseQuoteResponse,
   quoteFromWiseResponse,
   selectWisePayInOption,
+  wiseQuoteWithinLimit,
   type WiseQuoteResponse,
 } from "./wise";
 
@@ -57,6 +59,29 @@ describe("quoteFromWiseResponse", () => {
     assert.equal(quote.lkrReceived, 447405.74);
     assert.equal(quote.effectiveRate, 447405.74 / 1000);
     assert.equal(quote.behindBoardRate, 450.478 - 447405.74 / 1000);
+  });
+});
+
+describe("wiseQuoteWithinLimit", () => {
+  it("keeps quotes up to 5 million LKR and drops anything above", () => {
+    const within = quoteFromWiseResponse(fixtureQuote());
+    assert.equal(wiseQuoteWithinLimit(within), within);
+    assert.equal(
+      wiseQuoteWithinLimit({
+        ...within,
+        amountGbp: 15000,
+        lkrReceived: WISE_MAX_LKR_RECEIVED,
+      })?.lkrReceived,
+      5_000_000,
+    );
+    assert.equal(
+      wiseQuoteWithinLimit({
+        ...within,
+        amountGbp: 15000,
+        lkrReceived: 5_000_000.01,
+      }),
+      null,
+    );
   });
 });
 

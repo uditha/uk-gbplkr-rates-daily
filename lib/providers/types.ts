@@ -20,7 +20,7 @@ export type ProviderSnapshot = {
   boardRate: number;
   rateKind: "buying" | "send";
   asOf: string | null;
-  quotes: Quote[];
+  quotes: (Quote | null)[];
 };
 
 export type ComparisonRates = {

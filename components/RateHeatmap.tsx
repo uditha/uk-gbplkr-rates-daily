@@ -1,4 +1,5 @@
 import { colorForBehind, heatmapGradient } from "@/lib/heatmap";
+import { WISE_PROVIDER_ID } from "@/lib/providers/wise";
 import type { ComparisonRates, Quote } from "@/lib/providers/types";
 
 function formatRate(rate: number) {
@@ -55,22 +56,61 @@ export function RateHeatmap({ data }: { data: ComparisonRates }) {
                   {provider.asOf ? ` · ${provider.asOf}` : ""}
                 </span>
               </div>
-              {provider.quotes.map((quote, column) => (
-                <HeatmapCell
-                  key={`${provider.id}-${quote.amountGbp}`}
-                  quote={quote}
-                  leader={leaders[column]}
-                  compareAcrossProviders={compareAcrossProviders}
-                  label={data.amounts[column]?.label ?? String(quote.amountGbp)}
-                  providerName={provider.name}
-                />
-              ))}
+              {data.amounts.map((amount, column) => {
+                const quote = provider.quotes[column] ?? null;
+                if (!quote) {
+                  return (
+                    <UnavailableCell
+                      key={`${provider.id}-${amount.amountGbp}`}
+                      label={amount.label}
+                      providerName={provider.name}
+                      caption={
+                        provider.id === WISE_PROVIDER_ID ? "max 5M" : "n/a"
+                      }
+                    />
+                  );
+                }
+                return (
+                  <HeatmapCell
+                    key={`${provider.id}-${quote.amountGbp}`}
+                    quote={quote}
+                    leader={leaders[column]}
+                    compareAcrossProviders={compareAcrossProviders}
+                    label={amount.label}
+                    providerName={provider.name}
+                  />
+                );
+              })}
             </div>
           ))}
         </div>
       </div>
 
       <HeatmapLegend />
+    </div>
+  );
+}
+
+function UnavailableCell({
+  label,
+  providerName,
+  caption,
+}: {
+  label: string;
+  providerName: string;
+  caption: string;
+}) {
+  return (
+    <div
+      title={`${providerName} £${label}: ${caption === "max 5M" ? "over Wise’s 5 million LKR send limit" : "no quote"}`}
+      className="flex h-full min-h-0 flex-col items-center justify-center rounded-md bg-zinc-100 px-1 py-1.5 text-center text-zinc-400"
+    >
+      <span className="font-mono text-[13px] font-semibold tabular-nums leading-none sm:text-sm">
+        —
+      </span>
+      <span className="mt-1 font-mono text-[10px] tabular-nums leading-none sm:text-[11px]">
+        {caption}
+      </span>
     </div>
   );
 }

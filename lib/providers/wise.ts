@@ -5,6 +5,7 @@ export const WISE_RATES_URL = "https://wise.com/gb/";
 export const WISE_QUOTES_URL = "https://wise.com/gateway/v3/quotes";
 export const WISE_PROVIDER_ID = "wise";
 export const WISE_PROVIDER_NAME = "Wise";
+export const WISE_MAX_LKR_RECEIVED = 5_000_000;
 
 const USER_AGENT =
   "Mozilla/5.0 (compatible; uk-gbplkr-rates/1.0; +https://github.com/uditha/uk-gbplkr-rates-daily)";
@@ -127,6 +128,11 @@ export function quoteFromWiseResponse(response: WiseQuoteResponse): Quote {
   };
 }
 
+export function wiseQuoteWithinLimit(quote: Quote): Quote | null {
+  if (quote.lkrReceived > WISE_MAX_LKR_RECEIVED) return null;
+  return quote;
+}
+
 export function formatWiseAsOf(rateTimestamp: string | undefined): string | null {
   if (!rateTimestamp) return null;
   const parsed = new Date(rateTimestamp);
@@ -135,7 +141,7 @@ export function formatWiseAsOf(rateTimestamp: string | undefined): string | null
 }
 
 export function buildWiseSnapshot(
-  quotes: Quote[],
+  quotes: (Quote | null)[],
   boardRate: number,
   asOf: string | null,
 ): ProviderSnapshot {
@@ -182,16 +188,22 @@ export async function fetchWiseQuote(
 }
 
 export async function fetchWiseSnapshot(): Promise<ProviderSnapshot> {
-  const responses = await Promise.all(
-    SEND_AMOUNTS.map((column) => fetchWiseQuote(column.amountGbp)),
+  const first = await fetchWiseQuote(SEND_AMOUNTS[0].amountGbp);
+  const rest = await Promise.all(
+    SEND_AMOUNTS.slice(1).map(async (column) => {
+      // Fees reduce LKR received, so 90% of amount × rate is a safe over-limit skip.
+      if (column.amountGbp * first.rate * 0.9 > WISE_MAX_LKR_RECEIVED) {
+        return null;
+      }
+      return fetchWiseQuote(column.amountGbp);
+    }),
   );
-  const first = responses[0];
-  if (!first) {
-    throw new Error("Wise returned no quotes");
-  }
+  const responses = [first, ...rest];
 
   return buildWiseSnapshot(
-    responses.map(quoteFromWiseResponse),
+    responses.map((response) =>
+      response ? wiseQuoteWithinLimit(quoteFromWiseResponse(response)) : null,
+    ),
     first.rate,
     formatWiseAsOf(first.rateTimestamp),
   );
