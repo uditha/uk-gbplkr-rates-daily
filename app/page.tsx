@@ -22,25 +22,25 @@ export default async function Home() {
   }
 
   return (
-    <div className="h-dvh w-full overflow-hidden bg-zinc-100 p-3 sm:p-5">
-      <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
-        <header className="flex shrink-0 items-center justify-between gap-3 border-b border-zinc-100 px-4 py-3 sm:px-5">
-          <div>
-            <h1 className="text-sm font-semibold tracking-tight text-zinc-900">
+    <div className="box-border flex h-dvh max-h-dvh w-full overflow-hidden overscroll-none bg-zinc-100 p-2 sm:p-3">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
+        <header className="flex shrink-0 items-center justify-between gap-3 border-b border-zinc-100 px-3 py-2 sm:px-4">
+          <div className="min-w-0">
+            <h1 className="truncate text-sm font-semibold tracking-tight text-zinc-900">
               UK → Sri Lanka
             </h1>
-            <p className="mt-0.5 text-[11px] text-zinc-500">
+            <p className="truncate text-[11px] text-zinc-500">
               Effective LKR per £1, by send amount
             </p>
           </div>
           <Link
             href="/admin"
-            className="rounded-md border border-zinc-200 px-2.5 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-50"
+            className="shrink-0 rounded-md border border-zinc-200 px-2.5 py-1 text-xs font-medium text-zinc-600 hover:bg-zinc-50"
           >
             Admin
           </Link>
         </header>
-        <div className="min-h-0 flex-1 px-3 py-3 sm:px-4 sm:py-4">
+        <div className="min-h-0 min-w-0 flex-1 overflow-hidden px-2 py-2 sm:px-3 sm:py-3">
           <RateHeatmap data={data} />
         </div>
       </div>

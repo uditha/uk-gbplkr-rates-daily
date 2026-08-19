@@ -23,6 +23,17 @@ function formatLkr(amount: number) {
   }).format(Math.round(amount));
 }
 
+function formatColumnLabel(amountGbp: number, label: string) {
+  if (amountGbp >= 1000) {
+    const thousands = amountGbp / 1000;
+    const compact = Number.isInteger(thousands)
+      ? String(thousands)
+      : thousands.toFixed(1).replace(/\.0$/, "");
+    return `£${compact}k`;
+  }
+  return `£${label}`;
+}
+
 export function RateHeatmap({ data }: { data: ComparisonRates }) {
   const compareAcrossProviders = data.providers.length > 1;
   const leaders = data.amounts.map((_, column) => {
@@ -33,34 +44,34 @@ export function RateHeatmap({ data }: { data: ComparisonRates }) {
   });
 
   return (
-    <div className="flex h-full min-h-0 w-full items-stretch gap-4">
-      <div className="min-h-0 min-w-0 flex-1 overflow-auto">
+    <div className="flex h-full min-h-0 min-w-0 w-full items-stretch gap-3 overflow-hidden">
+      <div className="min-h-0 min-w-0 flex-1 overflow-hidden">
         <div
-          className="grid h-full min-h-[12rem] min-w-[48rem] gap-x-1 gap-y-1.5"
+          className="grid h-full w-full gap-1 overflow-hidden"
           style={{
-            gridTemplateColumns: `max-content repeat(${data.amounts.length}, minmax(4.25rem, 1fr))`,
-            gridTemplateRows: `auto repeat(${data.providers.length}, minmax(4.25rem, 1fr))`,
+            gridTemplateColumns: `clamp(7.5rem, 16vw, 9.75rem) repeat(${data.amounts.length}, minmax(0, 1fr))`,
+            gridTemplateRows: `1.5rem repeat(${data.providers.length}, minmax(0, 1fr))`,
           }}
         >
-          <div className="sticky left-0 top-0 z-30 bg-white" />
+          <div className="bg-white" />
           {data.amounts.map((amount) => (
             <div
               key={amount.amountGbp}
-              className="sticky top-0 z-20 bg-white px-1 pb-2 text-center text-[11px] font-medium text-zinc-500"
+              className="flex items-end justify-center overflow-hidden px-0.5 pb-1 text-center text-[10px] font-medium tabular-nums text-zinc-500 sm:text-[11px]"
             >
-              £{amount.label}
+              {formatColumnLabel(amount.amountGbp, amount.label)}
             </div>
           ))}
 
           {data.providers.map((provider) => (
             <div key={provider.id} className="contents">
-              <div className="sticky left-0 z-10 flex max-w-[11.25rem] items-center gap-2 bg-white py-0.5 pr-2">
-                <ProviderLogo id={provider.id} name={provider.name} size={28} />
+              <div className="flex min-w-0 items-center gap-2 overflow-hidden bg-white pr-2">
+                <ProviderLogo id={provider.id} name={provider.name} size={24} />
                 <div className="min-w-0">
-                  <span className="block text-[12px] font-medium leading-tight text-zinc-800">
+                  <span className="block truncate text-[12px] font-medium leading-tight text-zinc-800">
                     {provider.name}
                   </span>
-                  <span className="mt-0.5 block font-mono text-[10px] tabular-nums text-zinc-500">
+                  <span className="mt-0.5 block truncate font-mono text-[10px] tabular-nums text-zinc-500">
                     {formatRate(provider.boardRate)}
                     {provider.rateKind === "buying" ? " buy" : ""}
                     {provider.asOf ? ` · ${provider.asOf}` : ""}
@@ -125,12 +136,12 @@ function UnavailableCell({
   return (
     <div
       title={`${providerName} £${label}: ${unavailableReason(caption)}`}
-      className="flex h-full min-h-0 flex-col items-center justify-center rounded-lg bg-zinc-50 px-1 py-1.5 text-center text-zinc-400 ring-1 ring-zinc-100"
+      className="flex h-full min-h-0 min-w-0 flex-col items-center justify-center overflow-hidden rounded-md bg-zinc-50 px-0.5 py-1 text-center text-zinc-400 ring-1 ring-zinc-100"
     >
-      <span className="font-mono text-[13px] font-semibold tabular-nums leading-none sm:text-sm">
+      <span className="font-mono text-[length:clamp(10px,1.05vw,13px)] font-semibold tabular-nums leading-none">
         —
       </span>
-      <span className="mt-1 font-mono text-[10px] tabular-nums leading-none sm:text-[11px]">
+      <span className="mt-0.5 font-mono text-[length:clamp(8px,0.85vw,11px)] tabular-nums leading-none">
         {caption}
       </span>
     </div>
@@ -167,17 +178,17 @@ function HeatmapCell({
   return (
     <div
       title={`${providerName} £${label}: ${rankHint}fee £${quote.feeGbp}, recipient ${formatLkr(quote.lkrReceived)} LKR, effective ${formatRate(quote.effectiveRate)}`}
-      className="relative flex h-full min-h-0 flex-col items-center justify-center rounded-lg px-1 py-1.5 text-center"
+      className="relative flex h-full min-h-0 min-w-0 flex-col items-center justify-center overflow-hidden rounded-md px-0.5 py-1 text-center"
       style={{
         background,
         color,
         boxShadow: isLeader ? "inset 0 0 0 2px rgba(255,255,255,0.7)" : undefined,
       }}
     >
-      <span className="font-mono text-[13px] font-semibold tabular-nums leading-none sm:text-sm">
+      <span className="font-mono text-[length:clamp(10px,1.05vw,13px)] font-semibold tabular-nums leading-none">
         {formatRate(quote.effectiveRate)}
       </span>
-      <span className="mt-1 font-mono text-[10px] tabular-nums leading-none opacity-90 sm:text-[11px]">
+      <span className="mt-0.5 font-mono text-[length:clamp(8px,0.85vw,11px)] tabular-nums leading-none opacity-90">
         {formatLkr(quote.lkrReceived)}
       </span>
     </div>
@@ -186,11 +197,11 @@ function HeatmapCell({
 
 function HeatmapLegend() {
   return (
-    <div className="hidden h-full min-h-0 shrink-0 pr-1 sm:flex sm:flex-col">
-      <p className="mb-2 max-w-[7rem] text-[11px] leading-tight text-zinc-500">
+    <div className="hidden h-full min-h-0 w-[6.5rem] shrink-0 overflow-hidden pr-1 sm:flex sm:flex-col">
+      <p className="mb-2 text-[11px] leading-tight text-zinc-500">
         Green is the best rate in that column
       </p>
-      <div className="flex min-h-0 flex-1 items-stretch gap-2">
+      <div className="flex min-h-0 flex-1 items-stretch gap-2 overflow-hidden">
         <div
           className="w-2.5 rounded-full"
           style={{ background: heatmapGradient() }}
