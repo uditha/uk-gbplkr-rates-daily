@@ -6,6 +6,7 @@ import {
 } from "@/lib/store/refresh";
 
 export const dynamic = "force-dynamic";
+export const preferredRegion = "lhr1";
 
 export async function GET() {
   const state = await loadStore();

@@ -44,4 +44,9 @@ npm run build
 
 ## Deploy on Vercel
 
-Import this GitHub repository at [vercel.com/new](https://vercel.com/new) and deploy. Use `/admin` to pull fresh rates after deploy.
+Import this GitHub repository at [vercel.com/new](https://vercel.com/new) and deploy the branch `cursor/gbp-lkr-heatmap-page-6ee2` (empty `main` does not include the heatmap). Use `/admin` to pull fresh rates after deploy.
+
+Hobby plans can only run functions in **one** region and cannot use Function Failover (passive regions). This repo pins London in `vercel.json` (`regions: ["lhr1"]`). If deploy fails with *“Deploying Serverless Function passive regions is restricted to the Enterprise plan”*:
+
+1. Project **Settings → Functions** — Function Region **London (`lhr1`)**, **Function Failover off**.
+2. Redeploy that branch (or import the repo as a new project instead of a claimed temporary deployment).

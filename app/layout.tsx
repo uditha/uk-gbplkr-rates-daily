@@ -18,6 +18,9 @@ export const metadata: Metadata = {
     "Live GBP to LKR remittance heatmap. RemitWire (BOC UK) effective rates by send amount.",
 };
 
+/** Hobby plans allow one function region. London is closest to this UK corridor. */
+export const preferredRegion = "lhr1";
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html

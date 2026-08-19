@@ -1,6 +1,7 @@
 import { getComparisonRates } from "@/lib/providers";
 
 export const dynamic = "force-dynamic";
+export const preferredRegion = "lhr1";
 
 export async function GET() {
   const rates = await getComparisonRates();
