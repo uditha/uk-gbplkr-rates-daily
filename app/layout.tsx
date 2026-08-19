@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "UK → Sri Lanka remittance rates",
   description:
-    "Daily GBP to LKR comparison heatmap across UK money transfer providers.",
+    "Live GBP to LKR remittance heatmap. RemitWire (BOC UK) effective rates by send amount.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
