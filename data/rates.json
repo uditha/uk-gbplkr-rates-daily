@@ -1,0 +1,201 @@
+{
+  "updatedAt": "2026-08-19T14:29:14.193Z",
+  "providers": [
+    {
+      "id": "remitwire-boc-uk",
+      "name": "RemitWire (BOC UK)",
+      "wired": true,
+      "sourceUrl": "https://bankofceylon.co.uk/rates/",
+      "status": "ok",
+      "updatedAt": "2026-08-19T14:29:14.193Z",
+      "error": null,
+      "snapshot": {
+        "id": "remitwire-boc-uk",
+        "name": "RemitWire (BOC UK)",
+        "sourceUrl": "https://bankofceylon.co.uk/rates/",
+        "pair": "GBPLKR",
+        "boardRate": 448,
+        "rateKind": "buying",
+        "asOf": "19/08/2026",
+        "quotes": [
+          {
+            "amountGbp": 300,
+            "feeGbp": 3,
+            "netGbp": 297,
+            "lkrReceived": 133056,
+            "effectiveRate": 443.52,
+            "behindBoardRate": 4.480000000000018
+          },
+          {
+            "amountGbp": 500,
+            "feeGbp": 3,
+            "netGbp": 497,
+            "lkrReceived": 222656,
+            "effectiveRate": 445.312,
+            "behindBoardRate": 2.687999999999988
+          },
+          {
+            "amountGbp": 1000,
+            "feeGbp": 3,
+            "netGbp": 997,
+            "lkrReceived": 446656,
+            "effectiveRate": 446.656,
+            "behindBoardRate": 1.343999999999994
+          },
+          {
+            "amountGbp": 2000,
+            "feeGbp": 5,
+            "netGbp": 1995,
+            "lkrReceived": 893760,
+            "effectiveRate": 446.88,
+            "behindBoardRate": 1.1200000000000045
+          },
+          {
+            "amountGbp": 2500,
+            "feeGbp": 5,
+            "netGbp": 2495,
+            "lkrReceived": 1117760,
+            "effectiveRate": 447.104,
+            "behindBoardRate": 0.896000000000015
+          },
+          {
+            "amountGbp": 5000,
+            "feeGbp": 5,
+            "netGbp": 4995,
+            "lkrReceived": 2237760,
+            "effectiveRate": 447.552,
+            "behindBoardRate": 0.4479999999999791
+          },
+          {
+            "amountGbp": 10000,
+            "feeGbp": 10,
+            "netGbp": 9990,
+            "lkrReceived": 4475520,
+            "effectiveRate": 447.552,
+            "behindBoardRate": 0.4479999999999791
+          },
+          {
+            "amountGbp": 15000,
+            "feeGbp": 10,
+            "netGbp": 14990,
+            "lkrReceived": 6715520,
+            "effectiveRate": 447.7013333333333,
+            "behindBoardRate": 0.2986666666666906
+          },
+          {
+            "amountGbp": 20000,
+            "feeGbp": 10,
+            "netGbp": 19990,
+            "lkrReceived": 8955520,
+            "effectiveRate": 447.776,
+            "behindBoardRate": 0.22399999999998954
+          },
+          {
+            "amountGbp": 25000,
+            "feeGbp": 20,
+            "netGbp": 24980,
+            "lkrReceived": 11191040,
+            "effectiveRate": 447.6416,
+            "behindBoardRate": 0.35840000000001737
+          },
+          {
+            "amountGbp": 50000,
+            "feeGbp": 20,
+            "netGbp": 49980,
+            "lkrReceived": 22391040,
+            "effectiveRate": 447.8208,
+            "behindBoardRate": 0.17919999999998026
+          },
+          {
+            "amountGbp": 100000,
+            "feeGbp": 25,
+            "netGbp": 99975,
+            "lkrReceived": 44788800,
+            "effectiveRate": 447.888,
+            "behindBoardRate": 0.11200000000002319
+          }
+        ]
+      }
+    },
+    {
+      "id": "global-exchange-smart",
+      "name": "Global Exchange (Smart)",
+      "wired": false,
+      "sourceUrl": null,
+      "status": "not_wired",
+      "updatedAt": null,
+      "error": null,
+      "snapshot": null
+    },
+    {
+      "id": "wise",
+      "name": "Wise",
+      "wired": false,
+      "sourceUrl": null,
+      "status": "not_wired",
+      "updatedAt": null,
+      "error": null,
+      "snapshot": null
+    },
+    {
+      "id": "taptap-send",
+      "name": "Taptap Send",
+      "wired": false,
+      "sourceUrl": null,
+      "status": "not_wired",
+      "updatedAt": null,
+      "error": null,
+      "snapshot": null
+    },
+    {
+      "id": "revolut-standard",
+      "name": "Revolut (Standard)",
+      "wired": false,
+      "sourceUrl": null,
+      "status": "not_wired",
+      "updatedAt": null,
+      "error": null,
+      "snapshot": null
+    },
+    {
+      "id": "remitly-standard",
+      "name": "Remitly (standard)",
+      "wired": false,
+      "sourceUrl": null,
+      "status": "not_wired",
+      "updatedAt": null,
+      "error": null,
+      "snapshot": null
+    },
+    {
+      "id": "western-union-bank",
+      "name": "Western Union (bank)",
+      "wired": false,
+      "sourceUrl": null,
+      "status": "not_wired",
+      "updatedAt": null,
+      "error": null,
+      "snapshot": null
+    },
+    {
+      "id": "wu-cash-pickup-sl",
+      "name": "WU (cash pickup SL)",
+      "wired": false,
+      "sourceUrl": null,
+      "status": "not_wired",
+      "updatedAt": null,
+      "error": null,
+      "snapshot": null
+    },
+    {
+      "id": "ria-money-transfer",
+      "name": "Ria Money Transfer",
+      "wired": false,
+      "sourceUrl": null,
+      "status": "not_wired",
+      "updatedAt": null,
+      "error": null,
+      "snapshot": null
+    }
+  ]
+}

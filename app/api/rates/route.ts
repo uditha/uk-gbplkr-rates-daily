@@ -3,12 +3,12 @@ import { getComparisonRates } from "@/lib/providers";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  try {
-    const rates = await getComparisonRates();
-    return Response.json(rates);
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Failed to fetch provider rates";
-    return Response.json({ error: message }, { status: 502 });
+  const rates = await getComparisonRates();
+  if (!rates) {
+    return Response.json(
+      { error: "No stored rates yet. Refresh a provider from /admin." },
+      { status: 404 },
+    );
   }
+  return Response.json(rates);
 }

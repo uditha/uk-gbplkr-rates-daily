@@ -1,29 +1,28 @@
+import Link from "next/link";
 import { RateHeatmap } from "@/components/RateHeatmap";
 import { getComparisonRates } from "@/lib/providers";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  let data;
-  let message: string | null = null;
-
-  try {
-    data = await getComparisonRates();
-  } catch (error) {
-    message =
-      error instanceof Error ? error.message : "Could not load live rates";
-  }
+  const data = await getComparisonRates();
 
   if (!data) {
     return (
       <div className="flex h-dvh items-center justify-center bg-white p-6 text-center">
-        <p className="max-w-md text-sm text-zinc-600">{message}</p>
+        <p className="max-w-md text-sm text-zinc-600">
+          No stored rates yet. Refresh a provider from{" "}
+          <Link className="underline" href="/admin">
+            /admin
+          </Link>
+          .
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="h-dvh w-full bg-white p-3 sm:p-4">
+    <div className="h-dvh w-full overflow-hidden bg-white p-3 sm:p-4">
       <RateHeatmap data={data} />
     </div>
   );

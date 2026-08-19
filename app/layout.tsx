@@ -25,7 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       style={{ colorScheme: "light" }}
     >
-      <body className="h-full overflow-hidden bg-white font-sans text-zinc-900">
+      <body className="min-h-full bg-white font-sans text-zinc-900">
         {children}
       </body>
     </html>
