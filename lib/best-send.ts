@@ -72,7 +72,7 @@ function rankedAtColumn(data: ComparisonRates, columnIndex: number) {
 export function topQuotesForAmount(
   data: ComparisonRates,
   amountGbp: number,
-  limit = 3,
+  limit = 5,
 ): BestSendPick[] {
   if (!Number.isFinite(amountGbp) || amountGbp <= 0) return [];
 

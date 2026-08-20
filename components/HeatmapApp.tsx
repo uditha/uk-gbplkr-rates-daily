@@ -28,20 +28,22 @@ function formatLkr(amount: number) {
 const RANK_BADGE = [
   "bg-emerald-700 text-white",
   "bg-zinc-600 text-white",
+  "bg-zinc-500 text-white",
   "bg-zinc-400 text-white",
+  "bg-zinc-300 text-zinc-700",
 ] as const;
 
 function RankedPick({ pick }: { pick: BestSendPick }) {
-  const badge = RANK_BADGE[pick.rank - 1] ?? RANK_BADGE[2];
+  const badge = RANK_BADGE[pick.rank - 1] ?? RANK_BADGE[4];
 
   return (
-    <div className="flex min-w-0 flex-1 items-center gap-2 px-2.5 py-1.5">
+    <div className="flex min-w-0 flex-1 items-center gap-1.5 px-2 py-1.5">
       <span
         className={`inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold tabular-nums ${badge}`}
       >
         {pick.rank}
       </span>
-      <ProviderLogo id={pick.provider.id} name={pick.provider.name} size={24} />
+      <ProviderLogo id={pick.provider.id} name={pick.provider.name} size={22} />
       <div className="min-w-0">
         <p className="truncate text-xs font-semibold leading-tight text-zinc-900">
           {pick.provider.name}

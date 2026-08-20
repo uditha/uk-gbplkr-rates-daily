@@ -62,6 +62,26 @@ function fixture(): ComparisonRates {
         asOf: null,
         quotes: [quote(500, 445), quote(1000, 445.8), quote(2000, 446)],
       },
+      {
+        id: "revolut",
+        name: "Revolut (Standard)",
+        sourceUrl: "https://revolut.com",
+        pair: "GBPLKR",
+        boardRate: 448,
+        rateKind: "send",
+        asOf: null,
+        quotes: [quote(500, 448), quote(1000, 448.2), quote(2000, 448.1)],
+      },
+      {
+        id: "ria",
+        name: "Ria Money Transfer",
+        sourceUrl: "https://riamoneytransfer.com",
+        pair: "GBPLKR",
+        boardRate: 448,
+        rateKind: "send",
+        asOf: null,
+        quotes: [quote(500, 444), quote(1000, 444.2), quote(2000, 444.1)],
+      },
     ],
   };
 }
@@ -85,20 +105,20 @@ describe("parseSendAmount", () => {
 describe("bestQuoteForAmount", () => {
   it("picks the highest effective rate at an exact column", () => {
     const pick = bestQuoteForAmount(fixture(), 1000);
-    assert.equal(pick?.provider.id, "taptap");
+    assert.equal(pick?.provider.id, "revolut");
     assert.equal(pick?.column.amountGbp, 1000);
-    assert.equal(pick?.estimatedLkr, 447.5 * 1000);
+    assert.equal(pick?.estimatedLkr, 448.2 * 1000);
   });
 
   it("snaps to the nearest stored column, preferring the lower amount on a tie", () => {
     const pick = bestQuoteForAmount(fixture(), 1500);
     assert.equal(pick?.column.amountGbp, 1000);
-    assert.equal(pick?.estimatedLkr, 447.5 * 1500);
+    assert.equal(pick?.estimatedLkr, 448.2 * 1500);
   });
 
   it("skips a nearer column when nobody has a quote there", () => {
     const pick = bestQuoteForAmount(fixture(), 2000);
-    assert.equal(pick?.provider.id, "taptap");
+    assert.equal(pick?.provider.id, "revolut");
     assert.equal(pick?.column.amountGbp, 2000);
   });
 
@@ -109,14 +129,16 @@ describe("bestQuoteForAmount", () => {
 });
 
 describe("topQuotesForAmount", () => {
-  it("returns the top three providers as ranks 1, 2, and 3", () => {
+  it("returns the top five providers as ranks 1 through 5", () => {
     const picks = topQuotesForAmount(fixture(), 1000);
     assert.deepEqual(
       picks.map((pick) => [pick.rank, pick.provider.id]),
       [
-        [1, "taptap"],
-        [2, "wise"],
-        [3, "remitwire"],
+        [1, "revolut"],
+        [2, "taptap"],
+        [3, "wise"],
+        [4, "remitwire"],
+        [5, "ria"],
       ],
     );
   });
@@ -125,7 +147,7 @@ describe("topQuotesForAmount", () => {
     const picks = topQuotesForAmount(fixture(), 2000);
     assert.deepEqual(
       picks.map((pick) => pick.provider.id),
-      ["taptap", "remitwire"],
+      ["revolut", "taptap", "remitwire", "ria"],
     );
   });
 });
