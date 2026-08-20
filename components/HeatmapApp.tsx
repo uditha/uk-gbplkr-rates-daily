@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { RateHeatmap } from "@/components/RateHeatmap";
+import { RateHeatmap, HEATMAP_NAME_COLUMN } from "@/components/RateHeatmap";
 import { ProviderLogo } from "@/components/ProviderLogo";
 import {
   bestQuoteForAmount,
@@ -34,17 +34,20 @@ export function HeatmapApp({ data }: { data: ComparisonRates }) {
 
   return (
     <>
-      <header className="flex shrink-0 items-center justify-between gap-3 border-b border-zinc-100 px-3 py-2 sm:px-4">
-        <div className="flex min-w-0 items-center gap-3">
-          <div className="min-w-0 shrink-0">
-            <h1 className="truncate text-sm font-semibold tracking-tight text-zinc-900">
-              UK → Sri Lanka
-            </h1>
-            <p className="hidden truncate text-[11px] text-zinc-500 sm:block">
-              Effective LKR per £1
-            </p>
-          </div>
+      <header className="flex shrink-0 items-center gap-1 border-b border-zinc-100 px-3 py-2">
+        <div
+          className="min-w-0 shrink-0 pr-2"
+          style={{ width: HEATMAP_NAME_COLUMN }}
+        >
+          <h1 className="truncate text-sm font-semibold tracking-tight text-zinc-900">
+            UK → Sri Lanka
+          </h1>
+          <p className="hidden truncate text-[11px] text-zinc-500 sm:block">
+            Effective LKR per £1
+          </p>
+        </div>
 
+        <div className="flex min-w-0 flex-1 items-center justify-between gap-3">
           <div className="flex min-w-0 items-stretch overflow-hidden rounded-xl bg-zinc-50 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.08)]">
             <form
               className="flex items-center gap-1.5 py-1.5 pl-3 pr-2"
@@ -109,16 +112,16 @@ export function HeatmapApp({ data }: { data: ComparisonRates }) {
               )}
             </div>
           </div>
-        </div>
 
-        <Link
-          href="/admin"
-          className="shrink-0 rounded-md px-2.5 py-1 text-xs font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700"
-        >
-          Admin
-        </Link>
+          <Link
+            href="/admin"
+            className="shrink-0 rounded-md px-2.5 py-1 text-xs font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700"
+          >
+            Admin
+          </Link>
+        </div>
       </header>
-      <div className="min-h-0 min-w-0 flex-1 overflow-hidden px-2 py-2 sm:px-3 sm:py-3">
+      <div className="min-h-0 min-w-0 flex-1 overflow-hidden px-3 pb-3 pt-2">
         <RateHeatmap data={data} activeAmountGbp={pick?.column.amountGbp} />
       </div>
     </>

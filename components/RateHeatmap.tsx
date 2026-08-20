@@ -10,6 +10,8 @@ import { RIA_PROVIDER_ID } from "@/lib/providers/ria";
 import type { ComparisonRates, Quote } from "@/lib/providers/types";
 import { ProviderLogo } from "@/components/ProviderLogo";
 
+export const HEATMAP_NAME_COLUMN = "12.5rem";
+
 function formatRate(rate: number) {
   return rate.toFixed(2);
 }
@@ -55,7 +57,7 @@ export function RateHeatmap({
         <div
           className="grid h-full w-full gap-1 overflow-hidden"
           style={{
-            gridTemplateColumns: `12.5rem repeat(${data.amounts.length}, minmax(0, 1fr))`,
+            gridTemplateColumns: `${HEATMAP_NAME_COLUMN} repeat(${data.amounts.length}, minmax(0, 1fr))`,
             gridTemplateRows: `1.5rem repeat(${data.providers.length}, minmax(0, 1fr))`,
           }}
         >

@@ -6,7 +6,7 @@ export type ProviderLogoSpec = {
 };
 
 export const PROVIDER_LOGOS: Record<string, ProviderLogoSpec> = {
-  "remitwire-boc-uk": { src: "/providers/boc-uk.jpg", fit: "cover" },
+  "remitwire-boc-uk": { src: "/providers/remitwire.png", fit: "cover" },
   "global-exchange-smart": {
     src: "/providers/global-exchange.png",
     fit: "cover",
