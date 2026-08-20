@@ -1,8 +1,11 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { PROVIDER_REGISTRY } from "@/lib/providers/registry";
-import { pickNewestStore } from "./snapshot";
+import { hasSharedStore, loadRemoteStore, saveRemoteStore } from "./remote-kv";
+import { isNewerRecord, mergeStores } from "./snapshot";
 import type { ProviderRecord, RatesStoreState } from "./types";
+
+export { hasSharedStore };
 
 type GlobalRates = typeof globalThis & {
   __gbplkrRates?: RatesStoreState;
@@ -97,15 +100,21 @@ export async function loadStore(): Promise<RatesStoreState> {
   const fromData = await readJsonFile(
     path.join(process.cwd(), "data", "rates.json"),
   );
-  const newest = pickNewestStore(memory, fromTmp, fromData) ?? emptyStore();
-  globalRates.__gbplkrRates = newest;
-  return newest;
+  const fromKv = await loadRemoteStore();
+  const newest =
+    mergeStores(memory, fromTmp, fromData, fromKv) ?? emptyStore();
+  const merged = mergeWithRegistry(newest);
+  globalRates.__gbplkrRates = merged;
+  return merged;
 }
 
 export async function saveStore(state: RatesStoreState): Promise<RatesStoreState> {
-  const next = mergeWithRegistry(state);
+  const current = (globalThis as GlobalRates).__gbplkrRates ?? null;
+  const fromKv = await loadRemoteStore();
+  const next = mergeWithRegistry(mergeStores(fromKv, current, state) ?? state);
   (globalThis as GlobalRates).__gbplkrRates = next;
   await writeStateFile(next);
+  await saveRemoteStore(next);
   return next;
 }
 
@@ -113,9 +122,12 @@ export async function saveProviderRecord(
   record: ProviderRecord,
 ): Promise<RatesStoreState> {
   const current = await loadStore();
-  const providers = current.providers.map((existing) =>
-    existing.id === record.id ? record : existing,
-  );
+  const providers = current.providers.map((existing) => {
+    if (existing.id !== record.id) {
+      return existing;
+    }
+    return isNewerRecord(existing, record) ? record : existing;
+  });
 
   return saveStore({
     updatedAt: record.updatedAt ?? current.updatedAt,

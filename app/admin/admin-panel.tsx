@@ -1,16 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import { GLOBAL_EXCHANGE_PROVIDER_ID } from "@/lib/providers/global-exchange";
-import {
-  loadBrowserStore,
-  newerStore,
-  saveBrowserRates,
-  subscribeBrowserStore,
-} from "@/lib/store/browser-rates";
 import type { ProviderRecord, RatesStoreState } from "@/lib/store/types";
 import { ProviderLogo } from "@/components/ProviderLogo";
+import { useRatesStore } from "@/components/RatesProvider";
 
 function statusLabel(record: ProviderRecord) {
   if (record.status === "ok") return "Ready";
@@ -27,26 +22,11 @@ function formatWhen(value: string | null) {
   });
 }
 
-export function AdminPanel({ initialState }: { initialState: RatesStoreState }) {
-  const [state, setState] = useState(initialState);
+export function AdminPanel() {
+  const { state, sharedStore, replaceState } = useRatesStore();
   const [busyId, setBusyId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [manualRates, setManualRates] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    const newest = newerStore(initialState, loadBrowserStore());
-    if (!newest) return;
-    setState(newest);
-    saveBrowserRates(newest);
-  }, [initialState]);
-
-  useEffect(
-    () =>
-      subscribeBrowserStore((next) => {
-        setState((current) => newerStore(current, next) ?? next);
-      }),
-    [],
-  );
 
   async function postRates(body: { providerId: string; sendRate?: number }) {
     setBusyId(body.providerId);
@@ -63,8 +43,7 @@ export function AdminPanel({ initialState }: { initialState: RatesStoreState }) 
         error?: string;
       };
       if (payload.state) {
-        setState(payload.state);
-        saveBrowserRates(payload.state);
+        replaceState(payload.state);
       }
       if (!response.ok) {
         throw new Error(payload.error ?? "Refresh failed");
@@ -95,9 +74,7 @@ export function AdminPanel({ initialState }: { initialState: RatesStoreState }) 
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-600">
             Run each provider separately. The public heatmap only reads stored
-            quotes; it does not scrape provider sites. After a refresh, open
-            View heatmap in this browser — Vercel does not share those writes
-            across server instances.
+            quotes; it does not scrape provider sites.
           </p>
         </div>
         <div className="flex gap-2">
@@ -118,6 +95,16 @@ export function AdminPanel({ initialState }: { initialState: RatesStoreState }) 
           </button>
         </div>
       </header>
+
+      {sharedStore ? null : (
+        <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-950">
+          Refresh is kept in this session so the heatmap will not revert when
+          you come back. To keep Remitly and the other quotes after a reload,
+          and to show them to every visitor, add a <strong>KV</strong> store in
+          the Vercel project (Storage → Create Database → KV). That is the
+          shared database this app needs.
+        </p>
+      )}
 
       {message ? (
         <p className="rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-700">

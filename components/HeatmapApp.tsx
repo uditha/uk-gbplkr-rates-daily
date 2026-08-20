@@ -1,22 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { RateHeatmap, HEATMAP_NAME_COLUMN } from "@/components/RateHeatmap";
 import { ProviderLogo } from "@/components/ProviderLogo";
+import { useRatesStore } from "@/components/RatesProvider";
 import {
   formatCompactGbp,
   parseSendAmount,
   topQuotesForAmount,
   type BestSendPick,
 } from "@/lib/best-send";
-import type { ComparisonRates } from "@/lib/providers/types";
-import { comparisonRatesFromStore } from "@/lib/providers";
-import {
-  loadBrowserRates,
-  newerRates,
-  subscribeBrowserStore,
-} from "@/lib/store/browser-rates";
 
 function formatRate(rate: number) {
   return rate.toFixed(2);
@@ -64,40 +58,9 @@ function RankedPick({ pick }: { pick: BestSendPick }) {
   );
 }
 
-export function HeatmapApp({ data: seed }: { data: ComparisonRates | null }) {
-  const [data, setData] = useState(seed);
+export function HeatmapApp() {
+  const { rates: data } = useRatesStore();
   const [rawAmount, setRawAmount] = useState("1000");
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function hydrateLatestRates() {
-      const local = loadBrowserRates();
-      let remote: ComparisonRates | null = null;
-      try {
-        const response = await fetch("/api/rates", { cache: "no-store" });
-        if (response.ok) {
-          remote = (await response.json()) as ComparisonRates;
-        }
-      } catch {
-        // Keep whichever snapshot is already on this device.
-      }
-
-      const newest = newerRates(newerRates(seed, local), remote);
-      if (cancelled || !newest) return;
-      setData(newest);
-    }
-
-    void hydrateLatestRates();
-    return () => {
-      cancelled = true;
-    };
-  }, [seed]);
-
-  useEffect(() => subscribeBrowserStore((state) => {
-    const rates = comparisonRatesFromStore(state);
-    setData((current) => newerRates(current, rates));
-  }), []);
 
   const amountGbp = parseSendAmount(rawAmount);
   const picks = useMemo(

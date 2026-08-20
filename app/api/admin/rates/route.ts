@@ -1,5 +1,5 @@
 import { revalidatePath } from "next/cache";
-import { loadStore } from "@/lib/store/rates-store";
+import { hasSharedStore, loadStore } from "@/lib/store/rates-store";
 import {
   applyManualSendRate,
   refreshProvider,
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       const state = await refreshWiredProviders();
       revalidatePath("/");
       return Response.json(
-        { state },
+        { state, sharedStore: hasSharedStore() },
         { headers: { "Cache-Control": "no-store" } },
       );
     }
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     const state = await loadStore();
     revalidatePath("/");
     return Response.json(
-      { state, record },
+      { state, record, sharedStore: hasSharedStore() },
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch (error) {
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
       error instanceof Error ? error.message : "Failed to refresh provider";
     const state = await loadStore();
     return Response.json(
-      { error: message, state },
+      { error: message, state, sharedStore: hasSharedStore() },
       { status: 502, headers: { "Cache-Control": "no-store" } },
     );
   }
