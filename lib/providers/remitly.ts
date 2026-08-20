@@ -1,4 +1,5 @@
 import { SEND_AMOUNTS } from "./amounts";
+import { BROWSER_USER_AGENT } from "./http";
 import type { ProviderSnapshot, Quote } from "./types";
 
 export const REMITLY_RATES_URL = "https://www.remitly.com/gb/en/sri-lanka";
@@ -7,8 +8,7 @@ export const REMITLY_ESTIMATE_URL =
 export const REMITLY_PROVIDER_ID = "remitly-standard";
 export const REMITLY_PROVIDER_NAME = "Remitly (standard)";
 
-const USER_AGENT =
-  "Mozilla/5.0 (compatible; uk-gbplkr-rates/1.0; +https://github.com/uditha/uk-gbplkr-rates-daily)";
+const USER_AGENT = BROWSER_USER_AGENT;
 
 export type RemitlyEstimate = {
   sendAmount: number;
@@ -179,12 +179,12 @@ export async function fetchRemitlyEstimate(
   amountGbp = 300,
 ): Promise<RemitlyEstimate> {
   let lastError = "Remitly estimate failed";
-  for (let attempt = 0; attempt < 4; attempt += 1) {
+  for (let attempt = 0; attempt < 6; attempt += 1) {
     const response = await fetchRemitlyEstimateOnce(amountGbp);
     if (response.status === 429) {
       lastError = "Remitly estimate returned 429";
       await new Promise((resolve) =>
-        setTimeout(resolve, 1000 * (attempt + 1)),
+        setTimeout(resolve, 1500 * (attempt + 1)),
       );
       continue;
     }

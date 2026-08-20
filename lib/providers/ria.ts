@@ -1,4 +1,5 @@
 import { SEND_AMOUNTS } from "./amounts";
+import { BROWSER_USER_AGENT } from "./http";
 import type { ProviderSnapshot, Quote } from "./types";
 
 export const RIA_RATES_URL = "https://www.riamoneytransfer.com/en-gb";
@@ -9,8 +10,7 @@ export const RIA_CALCULATE_URL =
 export const RIA_PROVIDER_ID = "ria-money-transfer";
 export const RIA_PROVIDER_NAME = "Ria Money Transfer";
 
-const USER_AGENT =
-  "Mozilla/5.0 (compatible; uk-gbplkr-rates/1.0; +https://github.com/uditha/uk-gbplkr-rates-daily)";
+const USER_AGENT = BROWSER_USER_AGENT;
 
 export type RiaEstimate = {
   sendAmount: number;

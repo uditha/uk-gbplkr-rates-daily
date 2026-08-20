@@ -1,4 +1,5 @@
 import { SEND_AMOUNTS } from "./amounts";
+import { BROWSER_USER_AGENT } from "./http";
 import type { ProviderSnapshot, Quote } from "./types";
 
 export const REVOLUT_RATES_URL = "https://www.revolut.com/en-GB/send-money/";
@@ -7,8 +8,7 @@ export const REVOLUT_ROUTES_URL =
 export const REVOLUT_PROVIDER_ID = "revolut-standard";
 export const REVOLUT_PROVIDER_NAME = "Revolut (Standard)";
 
-const USER_AGENT =
-  "Mozilla/5.0 (compatible; uk-gbplkr-rates/1.0; +https://github.com/uditha/uk-gbplkr-rates-daily)";
+const USER_AGENT = BROWSER_USER_AGENT;
 
 const MINOR_UNITS = 100;
 

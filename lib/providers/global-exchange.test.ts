@@ -21,6 +21,14 @@ describe("parseGlobalExchangeSriLankaPage", () => {
     const html = readFileSync(fixturePath, "utf8");
     assert.equal(parseGlobalExchangeSriLankaPage(html).sendRate, 451);
   });
+
+  it("still reads the board rate when Cloudflare scripts are on the page", () => {
+    const html =
+      '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script>' +
+      '<div id="challenge-platform"></div>' +
+      "<p>1 GBP = 450 LKR</p>";
+    assert.equal(parseGlobalExchangeSriLankaPage(html).sendRate, 450);
+  });
 });
 
 describe("globalExchangeFeeGbp", () => {

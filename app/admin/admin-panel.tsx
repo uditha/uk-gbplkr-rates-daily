@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Fragment, useState } from "react";
 import { GLOBAL_EXCHANGE_PROVIDER_ID } from "@/lib/providers/global-exchange";
 import type { ProviderRecord, RatesStoreState } from "@/lib/store/types";
@@ -23,6 +24,7 @@ function formatWhen(value: string | null) {
 }
 
 export function AdminPanel() {
+  const router = useRouter();
   const { state, sharedStore, replaceState } = useRatesStore();
   const [busyId, setBusyId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -44,6 +46,7 @@ export function AdminPanel() {
       };
       if (payload.state) {
         replaceState(payload.state);
+        router.refresh();
       }
       if (!response.ok) {
         throw new Error(payload.error ?? "Refresh failed");

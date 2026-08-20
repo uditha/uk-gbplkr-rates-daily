@@ -86,7 +86,12 @@ export function HeatmapApp() {
             UK → Sri Lanka
           </h1>
           <p className="hidden truncate text-[11px] text-zinc-500 sm:block">
-            Effective LKR per £1
+            {data?.fetchedAt
+              ? `Updated ${new Date(data.fetchedAt).toLocaleTimeString("en-GB", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}`
+              : "Effective LKR per £1"}
           </p>
         </div>
 

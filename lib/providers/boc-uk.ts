@@ -1,12 +1,12 @@
 import { SEND_AMOUNTS } from "./amounts";
+import { BROWSER_USER_AGENT } from "./http";
 import type { ProviderSnapshot, Quote } from "./types";
 
 export const BOC_UK_RATES_URL = "https://bankofceylon.co.uk/rates/";
 export const BOC_UK_PROVIDER_ID = "remitwire-boc-uk";
 export const BOC_UK_PROVIDER_NAME = "RemitWire (BOC UK)";
 
-const USER_AGENT =
-  "Mozilla/5.0 (compatible; uk-gbplkr-rates/1.0; +https://github.com/uditha/uk-gbplkr-rates-daily)";
+const USER_AGENT = BROWSER_USER_AGENT;
 
 export function bocUkFeeGbp(amountGbp: number): number {
   if (amountGbp <= 0) {

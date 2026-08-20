@@ -1,4 +1,5 @@
 import { SEND_AMOUNTS } from "./amounts";
+import { BROWSER_USER_AGENT } from "./http";
 import type { ProviderSnapshot, Quote } from "./types";
 
 export const GLOBAL_EXCHANGE_RATES_URL =
@@ -6,8 +7,7 @@ export const GLOBAL_EXCHANGE_RATES_URL =
 export const GLOBAL_EXCHANGE_PROVIDER_ID = "global-exchange-smart";
 export const GLOBAL_EXCHANGE_PROVIDER_NAME = "Global Exchange (Smart)";
 
-const USER_AGENT =
-  "Mozilla/5.0 (compatible; uk-gbplkr-rates/1.0; +https://github.com/uditha/uk-gbplkr-rates-daily)";
+const USER_AGENT = BROWSER_USER_AGENT;
 
 export function globalExchangeFeeGbp(amountGbp: number): number {
   if (amountGbp <= 0) {
@@ -20,25 +20,23 @@ export function globalExchangeFeeGbp(amountGbp: number): number {
 export function parseGlobalExchangeSriLankaPage(html: string): {
   sendRate: number;
 } {
+  const match = html.match(/1\s*GBP\s*=[\s\S]{0,240}?([\d][\d.,]*)\s*LKR/i);
+  if (match) {
+    const sendRate = Number(match[1].replace(/,/g, ""));
+    if (Number.isFinite(sendRate) && sendRate > 0) {
+      return { sendRate };
+    }
+  }
+
   if (/just a moment|cf-challenge|challenge-platform/i.test(html)) {
     throw new Error(
-      "Global Exchange page was blocked by Cloudflare; try refresh from /admin after the page is reachable",
+      "Global Exchange page was blocked by Cloudflare; open the Sri Lanka page and save the 1 GBP = LKR rate below.",
     );
   }
 
-  const match = html.match(/1\s*GBP\s*=[\s\S]{0,240}?([\d][\d.,]*)\s*LKR/i);
-  if (!match) {
-    throw new Error(
-      "Could not find 1 GBP = … LKR on the Global Exchange Sri Lanka page",
-    );
-  }
-
-  const sendRate = Number(match[1].replace(/,/g, ""));
-  if (!Number.isFinite(sendRate) || sendRate <= 0) {
-    throw new Error(`Could not parse Global Exchange send rate: ${match[1]}`);
-  }
-
-  return { sendRate };
+  throw new Error(
+    "Could not find 1 GBP = … LKR on the Global Exchange Sri Lanka page",
+  );
 }
 
 export function quoteGlobalExchangeAmount(
@@ -104,5 +102,8 @@ export async function fetchGlobalExchangeHtml(): Promise<string> {
 export async function fetchGlobalExchangeSnapshot(): Promise<ProviderSnapshot> {
   const html = await fetchGlobalExchangeHtml();
   const { sendRate } = parseGlobalExchangeSriLankaPage(html);
-  return buildGlobalExchangeSnapshot(sendRate);
+  return buildGlobalExchangeSnapshot(
+    sendRate,
+    new Date().toLocaleDateString("en-GB"),
+  );
 }

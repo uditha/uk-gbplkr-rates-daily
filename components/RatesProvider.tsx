@@ -14,6 +14,7 @@ import type { ComparisonRates } from "@/lib/providers/types";
 import {
   loadBrowserStore,
   saveBrowserRates,
+  subscribeBrowserStore,
 } from "@/lib/store/browser-rates";
 import { mergeStores } from "@/lib/store/snapshot";
 import type { RatesStoreState } from "@/lib/store/types";
@@ -46,6 +47,14 @@ export function RatesProvider({
       return merged;
     });
   }, [initialState]);
+
+  useLayoutEffect(
+    () =>
+      subscribeBrowserStore((next) => {
+        setState((current) => mergeStores(current, next) ?? next);
+      }),
+    [],
+  );
 
   const replaceState = useCallback((next: RatesStoreState) => {
     setState((current) => {

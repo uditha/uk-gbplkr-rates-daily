@@ -1,4 +1,5 @@
 import { SEND_AMOUNTS } from "./amounts";
+import { BROWSER_USER_AGENT } from "./http";
 import type { ProviderSnapshot, Quote } from "./types";
 
 export const WU_RATES_URL =
@@ -14,8 +15,7 @@ export const WU_CASH_PROVIDER_NAME = "WU (cash pickup SL)";
 export const WU_BANK_SERVICE = "500";
 export const WU_CASH_SERVICE = "000";
 
-const USER_AGENT =
-  "Mozilla/5.0 (compatible; uk-gbplkr-rates/1.0; +https://github.com/uditha/uk-gbplkr-rates-daily)";
+const USER_AGENT = BROWSER_USER_AGENT;
 
 const PREFERRED_FUNDS_IN = ["PA", "EB", "TR"] as const;
 const CATALOG_CACHE_MS = 90_000;

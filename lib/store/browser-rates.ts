@@ -4,6 +4,7 @@ import { isNewerStore } from "@/lib/store/snapshot";
 import type { RatesStoreState } from "@/lib/store/types";
 
 export const BROWSER_RATES_KEY = "uk-gbplkr-store-v1";
+const STORE_EVENT = "uk-gbplkr-store";
 
 function isStoreState(value: unknown): value is RatesStoreState {
   if (typeof value !== "object" || value == null) return false;
@@ -20,6 +21,7 @@ function isStoreState(value: unknown): value is RatesStoreState {
 export function saveBrowserRates(state: RatesStoreState) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(BROWSER_RATES_KEY, JSON.stringify(state));
+  window.dispatchEvent(new CustomEvent(STORE_EVENT, { detail: state }));
 }
 
 export function loadBrowserStore(): RatesStoreState | null {
@@ -81,6 +83,15 @@ export function subscribeBrowserStore(
     }
   };
 
+  const handleCustom = (event: Event) => {
+    const detail = (event as CustomEvent<unknown>).detail;
+    if (isStoreState(detail)) onChange(detail);
+  };
+
   window.addEventListener("storage", handleStorage);
-  return () => window.removeEventListener("storage", handleStorage);
+  window.addEventListener(STORE_EVENT, handleCustom);
+  return () => {
+    window.removeEventListener("storage", handleStorage);
+    window.removeEventListener(STORE_EVENT, handleCustom);
+  };
 }

@@ -80,7 +80,10 @@ export async function applyManualSendRate(
 }
 
 export async function refreshWiredProviders(): Promise<RatesStoreState> {
-  for (const provider of getWiredProviders()) {
+  for (const [index, provider] of getWiredProviders().entries()) {
+    if (index > 0) {
+      await new Promise((resolve) => setTimeout(resolve, 400));
+    }
     try {
       await refreshProvider(provider.id);
     } catch {

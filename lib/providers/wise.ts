@@ -1,4 +1,5 @@
 import { SEND_AMOUNTS } from "./amounts";
+import { BROWSER_USER_AGENT } from "./http";
 import type { ProviderSnapshot, Quote } from "./types";
 
 export const WISE_RATES_URL = "https://wise.com/gb/";
@@ -7,8 +8,7 @@ export const WISE_PROVIDER_ID = "wise";
 export const WISE_PROVIDER_NAME = "Wise";
 export const WISE_MAX_LKR_RECEIVED = 5_000_000;
 
-const USER_AGENT =
-  "Mozilla/5.0 (compatible; uk-gbplkr-rates/1.0; +https://github.com/uditha/uk-gbplkr-rates-daily)";
+const USER_AGENT = BROWSER_USER_AGENT;
 
 const PREFERRED_PAY_INS = ["PISP", "BANK_TRANSFER"] as const;
 

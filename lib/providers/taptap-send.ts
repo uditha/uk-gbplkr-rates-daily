@@ -1,4 +1,5 @@
 import { SEND_AMOUNTS } from "./amounts";
+import { BROWSER_USER_AGENT } from "./http";
 import type { ProviderSnapshot, Quote } from "./types";
 
 export const TAPTAP_RATES_URL =
@@ -7,8 +8,7 @@ export const TAPTAP_FX_RATES_URL = "https://api.taptapsend.com/api/fxRates";
 export const TAPTAP_PROVIDER_ID = "taptap-send";
 export const TAPTAP_PROVIDER_NAME = "Taptap Send";
 
-const USER_AGENT =
-  "Mozilla/5.0 (compatible; uk-gbplkr-rates/1.0; +https://github.com/uditha/uk-gbplkr-rates-daily)";
+const USER_AGENT = BROWSER_USER_AGENT;
 
 export type TaptapFeeSchedule = {
   type?: string;
