@@ -155,10 +155,14 @@ export function selectWuPayGroup(
     );
   if (!group) {
     throw new Error(
-      `Western Union catalog had no ${service === WU_BANK_SERVICE ? "bank" : "cash pickup"} service`,
+      `Western Union catalog had no ${
+        service === WU_BANK_SERVICE ? "Direct to Bank" : "cash pickup"
+      } service`,
     );
   }
 
+  // Standard UK bank transfer: Pay by bank (PA), then Faster Payments (EB), then TR.
+  // Ignore Direct to Card, cards (CC), and any promotional headline FX.
   for (const fundsIn of PREFERRED_FUNDS_IN) {
     const match = group.payGroups.find((payGroup) => payGroup.fundsIn === fundsIn);
     if (match) return match;

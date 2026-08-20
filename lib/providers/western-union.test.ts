@@ -54,6 +54,31 @@ describe("selectWuPayGroup", () => {
     };
     assert.equal(selectWuPayGroup(withoutPa, WU_BANK_SERVICE).fundsIn, "EB");
   });
+
+  it("ignores Direct to Card even when it has a higher FX rate", () => {
+    const catalog = fixtureCatalog();
+    const bank = selectWuPayGroup(catalog, WU_BANK_SERVICE);
+    const withCard: WuCatalog = {
+      ...catalog,
+      services: [
+        {
+          service: "201",
+          serviceName: "Direct To Card",
+          payGroups: [
+            {
+              ...bank,
+              fxRate: 456.6247,
+              receiveAmount: 136987.41,
+            },
+          ],
+        },
+        ...catalog.services,
+      ],
+    };
+    const group = selectWuPayGroup(withCard, WU_BANK_SERVICE);
+    assert.equal(group.fxRate, 448.1680713);
+    assert.equal(group.fundsIn, "PA");
+  });
 });
 
 describe("quoteFromWuPayGroup", () => {
@@ -91,6 +116,7 @@ describe("buildWuSnapshot", () => {
     const bank = buildWuSnapshot("bank", catalogs, "19/08/2026");
     const cash = buildWuSnapshot("cash", catalogs, "19/08/2026");
     assert.equal(bank.id, "western-union-bank");
+    assert.equal(bank.name, "Western Union (bank)");
     assert.equal(cash.id, "wu-cash-pickup-sl");
     assert.equal(bank.boardRate, 448.1680713);
     assert.equal(cash.boardRate, 421.781385);
