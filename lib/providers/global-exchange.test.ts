@@ -41,12 +41,12 @@ describe("globalExchangeFeeGbp", () => {
 });
 
 describe("quoteGlobalExchangeAmount", () => {
-  it("converts the full send amount and adds the fee on top", () => {
-    const quote = quoteGlobalExchangeAmount(1000, 451);
+  it("deducts the fee then converts the remaining GBP so the heatmap shows LKR received", () => {
+    const quote = quoteGlobalExchangeAmount(300, 450);
     assert.equal(quote.feeGbp, 3);
-    assert.equal(quote.netGbp, 1000);
-    assert.equal(quote.lkrReceived, 451000);
-    assert.equal(quote.effectiveRate, 451000 / 1003);
+    assert.equal(quote.netGbp, 297);
+    assert.equal(quote.lkrReceived, 133650);
+    assert.equal(quote.effectiveRate, 133650 / 300);
   });
 });
 
