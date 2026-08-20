@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { RateHeatmap } from "@/components/RateHeatmap";
+import { HeatmapApp } from "@/components/HeatmapApp";
 import { getComparisonRates } from "@/lib/providers";
 
 export const dynamic = "force-dynamic";
@@ -24,25 +24,7 @@ export default async function Home() {
   return (
     <div className="box-border flex h-full max-h-full w-full overflow-hidden overscroll-none bg-zinc-100 p-2">
       <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
-        <header className="flex shrink-0 items-center justify-between gap-3 border-b border-zinc-100 px-3 py-2 sm:px-4">
-          <div className="min-w-0">
-            <h1 className="truncate text-sm font-semibold tracking-tight text-zinc-900">
-              UK → Sri Lanka
-            </h1>
-            <p className="truncate text-[11px] text-zinc-500">
-              Effective LKR per £1, by send amount
-            </p>
-          </div>
-          <Link
-            href="/admin"
-            className="shrink-0 rounded-md border border-zinc-200 px-2.5 py-1 text-xs font-medium text-zinc-600 hover:bg-zinc-50"
-          >
-            Admin
-          </Link>
-        </header>
-        <div className="min-h-0 min-w-0 flex-1 overflow-hidden px-2 py-2 sm:px-3 sm:py-3">
-          <RateHeatmap data={data} />
-        </div>
+        <HeatmapApp data={data} />
       </div>
     </div>
   );

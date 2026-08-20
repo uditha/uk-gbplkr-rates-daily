@@ -34,7 +34,13 @@ function formatColumnLabel(amountGbp: number, label: string) {
   return `£${label}`;
 }
 
-export function RateHeatmap({ data }: { data: ComparisonRates }) {
+export function RateHeatmap({
+  data,
+  activeAmountGbp = null,
+}: {
+  data: ComparisonRates;
+  activeAmountGbp?: number | null;
+}) {
   const compareAcrossProviders = data.providers.length > 1;
   const leaders = data.amounts.map((_, column) => {
     const values = data.providers
@@ -54,14 +60,19 @@ export function RateHeatmap({ data }: { data: ComparisonRates }) {
           }}
         >
           <div className="bg-white" />
-          {data.amounts.map((amount) => (
-            <div
-              key={amount.amountGbp}
-              className="flex items-end justify-center overflow-hidden px-0.5 pb-1 text-center text-[10px] font-medium tabular-nums text-zinc-500 sm:text-[11px]"
-            >
-              {formatColumnLabel(amount.amountGbp, amount.label)}
-            </div>
-          ))}
+          {data.amounts.map((amount) => {
+            const active = amount.amountGbp === activeAmountGbp;
+            return (
+              <div
+                key={amount.amountGbp}
+                className={`flex items-end justify-center overflow-hidden px-0.5 pb-1 text-center text-[10px] font-medium tabular-nums sm:text-[11px] ${
+                  active ? "text-zinc-800" : "text-zinc-500"
+                }`}
+              >
+                {formatColumnLabel(amount.amountGbp, amount.label)}
+              </div>
+            );
+          })}
 
           {data.providers.map((provider) => (
             <div key={provider.id} className="contents">
