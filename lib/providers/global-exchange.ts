@@ -44,10 +44,9 @@ export function quoteGlobalExchangeAmount(
   sendRate: number,
 ): Quote {
   const feeGbp = globalExchangeFeeGbp(amountGbp);
-  const netGbp = amountGbp;
+  const netGbp = amountGbp - feeGbp;
   const lkrReceived = netGbp * sendRate;
-  const totalPaidGbp = amountGbp + feeGbp;
-  const effectiveRate = lkrReceived / totalPaidGbp;
+  const effectiveRate = lkrReceived / amountGbp;
 
   return {
     amountGbp,
