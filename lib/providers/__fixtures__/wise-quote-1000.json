@@ -1,0 +1,39 @@
+{
+  "sourceAmount": 1000.0,
+  "sourceCurrency": "GBP",
+  "targetCurrency": "LKR",
+  "rate": 450.478,
+  "rateTimestamp": "2026-08-19T15:47:18Z",
+  "paymentOptions": [
+    {
+      "payIn": "PISP",
+      "payOut": "BANK_TRANSFER",
+      "disabled": false,
+      "sourceAmount": 1000.0,
+      "targetAmount": 447405.74,
+      "fee": {
+        "total": 6.82
+      }
+    },
+    {
+      "payIn": "BANK_TRANSFER",
+      "payOut": "BANK_TRANSFER",
+      "disabled": false,
+      "sourceAmount": 1000.0,
+      "targetAmount": 447396.73,
+      "fee": {
+        "total": 6.84
+      }
+    },
+    {
+      "payIn": "BALANCE",
+      "payOut": "BANK_TRANSFER",
+      "disabled": true,
+      "sourceAmount": 1000.0,
+      "targetAmount": 447784.14,
+      "fee": {
+        "total": 5.98
+      }
+    }
+  ]
+}

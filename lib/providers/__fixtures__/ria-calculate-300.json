@@ -1,0 +1,45 @@
+{
+  "statusMessage": null,
+  "model": {
+    "transferDetails": {
+      "selections": {
+        "countryTo": "LK",
+        "currencyTo": "LKR",
+        "currencyFrom": "GBP",
+        "paymentMethod": "BankAccount",
+        "deliveryMethod": "BankDeposit",
+        "amountFrom": 300.0,
+        "promoId": 0,
+        "shouldCalcAmountFrom": false
+      },
+      "calculations": {
+        "amountTo": 137512.48,
+        "amountFrom": 300.0,
+        "totalFeesAndTaxes": 0.0,
+        "totalAmount": 300.0,
+        "exchangeRate": 448.0,
+        "transferFee": 0.0,
+        "sendAmountLimit": {
+          "minimumSendFromAmount": 1.0,
+          "maximumSendFromAmount": 8000.0,
+          "minimumSendToAmount": 458.0,
+          "maximumSendToAmount": 3667000.0
+        },
+        "variableRates": [
+          {
+            "value": "BankDeposit",
+            "exchangeRate": 448.0,
+            "isBestRate": true
+          },
+          {
+            "value": "OfficePickup",
+            "exchangeRate": 447.61,
+            "isBestRate": false
+          }
+        ],
+        "exchangeRatePromo": 458.374927800184,
+        "calculatedRatePromo": 458.374927800184
+      }
+    }
+  }
+}
