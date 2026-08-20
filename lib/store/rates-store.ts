@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { PROVIDER_REGISTRY } from "@/lib/providers/registry";
+import { pickNewestStore } from "./snapshot";
 import type { ProviderRecord, RatesStoreState } from "./types";
 
 type GlobalRates = typeof globalThis & {
@@ -57,19 +58,9 @@ function mergeWithRegistry(state: RatesStoreState | null): RatesStoreState {
   };
 }
 
-async function readStateFile(): Promise<RatesStoreState | null> {
+async function readJsonFile(filePath: string): Promise<RatesStoreState | null> {
   try {
-    const raw = await readFile("/tmp/uk-gbplkr-rates.json", "utf8");
-    return mergeWithRegistry(JSON.parse(raw) as RatesStoreState);
-  } catch {
-    // fall through to the committed snapshot
-  }
-
-  try {
-    const raw = await readFile(
-      path.join(process.cwd(), "data", "rates.json"),
-      "utf8",
-    );
+    const raw = await readFile(filePath, "utf8");
     return mergeWithRegistry(JSON.parse(raw) as RatesStoreState);
   } catch {
     return null;
@@ -99,14 +90,16 @@ async function writeStateFile(state: RatesStoreState) {
 
 export async function loadStore(): Promise<RatesStoreState> {
   const globalRates = globalThis as GlobalRates;
-  if (globalRates.__gbplkrRates) {
-    return mergeWithRegistry(globalRates.__gbplkrRates);
-  }
-
-  const fromDisk = await readStateFile();
-  const state = fromDisk ?? emptyStore();
-  globalRates.__gbplkrRates = state;
-  return state;
+  const memory = globalRates.__gbplkrRates
+    ? mergeWithRegistry(globalRates.__gbplkrRates)
+    : null;
+  const fromTmp = await readJsonFile("/tmp/uk-gbplkr-rates.json");
+  const fromData = await readJsonFile(
+    path.join(process.cwd(), "data", "rates.json"),
+  );
+  const newest = pickNewestStore(memory, fromTmp, fromData) ?? emptyStore();
+  globalRates.__gbplkrRates = newest;
+  return newest;
 }
 
 export async function saveStore(state: RatesStoreState): Promise<RatesStoreState> {

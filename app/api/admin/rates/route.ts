@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { loadStore } from "@/lib/store/rates-store";
 import {
   applyManualSendRate,
@@ -6,11 +7,14 @@ import {
 } from "@/lib/store/refresh";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 export const preferredRegion = "lhr1";
 
 export async function GET() {
   const state = await loadStore();
-  return Response.json(state);
+  return Response.json(state, {
+    headers: { "Cache-Control": "no-store" },
+  });
 }
 
 export async function POST(request: Request) {
@@ -23,7 +27,11 @@ export async function POST(request: Request) {
 
     if (!providerId || providerId === "all") {
       const state = await refreshWiredProviders();
-      return Response.json({ state });
+      revalidatePath("/");
+      return Response.json(
+        { state },
+        { headers: { "Cache-Control": "no-store" } },
+      );
     }
 
     const record =
@@ -31,11 +39,18 @@ export async function POST(request: Request) {
         ? await applyManualSendRate(providerId, Number(body.sendRate))
         : await refreshProvider(providerId);
     const state = await loadStore();
-    return Response.json({ state, record });
+    revalidatePath("/");
+    return Response.json(
+      { state, record },
+      { headers: { "Cache-Control": "no-store" } },
+    );
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Failed to refresh provider";
     const state = await loadStore();
-    return Response.json({ error: message, state }, { status: 502 });
+    return Response.json(
+      { error: message, state },
+      { status: 502, headers: { "Cache-Control": "no-store" } },
+    );
   }
 }

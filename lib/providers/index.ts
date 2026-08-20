@@ -1,9 +1,11 @@
 import { SEND_AMOUNTS } from "./amounts";
 import { loadStore } from "@/lib/store/rates-store";
 import type { ComparisonRates } from "./types";
+import type { RatesStoreState } from "@/lib/store/types";
 
-export async function getComparisonRates(): Promise<ComparisonRates | null> {
-  const store = await loadStore();
+export function comparisonRatesFromStore(
+  store: RatesStoreState,
+): ComparisonRates | null {
   const providers = store.providers
     .map((record) => record.snapshot)
     .filter((snapshot) => snapshot != null);
@@ -17,4 +19,8 @@ export async function getComparisonRates(): Promise<ComparisonRates | null> {
     amounts: SEND_AMOUNTS,
     providers,
   };
+}
+
+export async function getComparisonRates(): Promise<ComparisonRates | null> {
+  return comparisonRatesFromStore(await loadStore());
 }

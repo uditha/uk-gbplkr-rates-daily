@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { RateHeatmap, HEATMAP_NAME_COLUMN } from "@/components/RateHeatmap";
 import { ProviderLogo } from "@/components/ProviderLogo";
 import {
@@ -11,6 +11,12 @@ import {
   type BestSendPick,
 } from "@/lib/best-send";
 import type { ComparisonRates } from "@/lib/providers/types";
+import { comparisonRatesFromStore } from "@/lib/providers";
+import {
+  loadBrowserRates,
+  newerRates,
+  subscribeBrowserStore,
+} from "@/lib/store/browser-rates";
 
 function formatRate(rate: number) {
   return rate.toFixed(2);
@@ -58,11 +64,45 @@ function RankedPick({ pick }: { pick: BestSendPick }) {
   );
 }
 
-export function HeatmapApp({ data }: { data: ComparisonRates }) {
+export function HeatmapApp({ data: seed }: { data: ComparisonRates | null }) {
+  const [data, setData] = useState(seed);
   const [rawAmount, setRawAmount] = useState("1000");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function hydrateLatestRates() {
+      const local = loadBrowserRates();
+      let remote: ComparisonRates | null = null;
+      try {
+        const response = await fetch("/api/rates", { cache: "no-store" });
+        if (response.ok) {
+          remote = (await response.json()) as ComparisonRates;
+        }
+      } catch {
+        // Keep whichever snapshot is already on this device.
+      }
+
+      const newest = newerRates(newerRates(seed, local), remote);
+      if (cancelled || !newest) return;
+      setData(newest);
+    }
+
+    void hydrateLatestRates();
+    return () => {
+      cancelled = true;
+    };
+  }, [seed]);
+
+  useEffect(() => subscribeBrowserStore((state) => {
+    const rates = comparisonRatesFromStore(state);
+    setData((current) => newerRates(current, rates));
+  }), []);
+
   const amountGbp = parseSendAmount(rawAmount);
   const picks = useMemo(
-    () => (amountGbp == null ? [] : topQuotesForAmount(data, amountGbp)),
+    () =>
+      data && amountGbp != null ? topQuotesForAmount(data, amountGbp) : [],
     [amountGbp, data],
   );
   const snappedFrom =
@@ -145,10 +185,22 @@ export function HeatmapApp({ data }: { data: ComparisonRates }) {
         </div>
       </header>
       <div className="min-h-0 min-w-0 flex-1 overflow-hidden px-3 pb-3 pt-2">
-        <RateHeatmap
-          data={data}
-          activeAmountGbp={picks[0]?.column.amountGbp}
-        />
+        {data ? (
+          <RateHeatmap
+            data={data}
+            activeAmountGbp={picks[0]?.column.amountGbp}
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center p-6 text-center">
+            <p className="max-w-md text-sm text-zinc-600">
+              No stored rates yet. Refresh a provider from{" "}
+              <Link className="underline" href="/admin">
+                /admin
+              </Link>
+              .
+            </p>
+          </div>
+        )}
       </div>
     </>
   );

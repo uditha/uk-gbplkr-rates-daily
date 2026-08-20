@@ -46,6 +46,8 @@ npm run build
 
 Import this GitHub repository at [vercel.com/new](https://vercel.com/new) and deploy the branch `cursor/gbp-lkr-heatmap-page-6ee2` (empty `main` does not include the heatmap). Use `/admin` to pull fresh rates after deploy.
 
+Admin refresh on Vercel writes to that function’s memory and `/tmp`. Those are **not shared** with the public heatmap function, so the page would otherwise keep showing the committed `data/rates.json`. After you refresh in `/admin`, this browser keeps the latest quotes and the heatmap reads that copy. To publish a new snapshot for every visitor, run `npm run refresh` locally and deploy the updated `data/rates.json`.
+
 Hobby plans can only run functions in **one** region and cannot use Function Failover (passive regions). This repo pins London in `vercel.json` (`regions: ["lhr1"]`). If deploy fails with *“Deploying Serverless Function passive regions is restricted to the Enterprise plan”*:
 
 1. Project **Settings → Functions** — Function Region **London (`lhr1`)**, **Function Failover off**.

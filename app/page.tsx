@@ -1,25 +1,13 @@
-import Link from "next/link";
+import { connection } from "next/server";
 import { HeatmapApp } from "@/components/HeatmapApp";
 import { getComparisonRates } from "@/lib/providers";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function Home() {
+  await connection();
   const data = await getComparisonRates();
-
-  if (!data) {
-    return (
-      <div className="flex h-dvh items-center justify-center bg-zinc-50 p-6 text-center">
-        <p className="max-w-md text-sm text-zinc-600">
-          No stored rates yet. Refresh a provider from{" "}
-          <Link className="underline" href="/admin">
-            /admin
-          </Link>
-          .
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="box-border flex h-full max-h-full w-full overflow-hidden overscroll-none bg-zinc-100 p-2">

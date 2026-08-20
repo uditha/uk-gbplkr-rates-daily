@@ -1,8 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { GLOBAL_EXCHANGE_PROVIDER_ID } from "@/lib/providers/global-exchange";
+import {
+  loadBrowserStore,
+  newerStore,
+  saveBrowserRates,
+  subscribeBrowserStore,
+} from "@/lib/store/browser-rates";
 import type { ProviderRecord, RatesStoreState } from "@/lib/store/types";
 import { ProviderLogo } from "@/components/ProviderLogo";
 
@@ -27,6 +33,21 @@ export function AdminPanel({ initialState }: { initialState: RatesStoreState }) 
   const [message, setMessage] = useState<string | null>(null);
   const [manualRates, setManualRates] = useState<Record<string, string>>({});
 
+  useEffect(() => {
+    const newest = newerStore(initialState, loadBrowserStore());
+    if (!newest) return;
+    setState(newest);
+    saveBrowserRates(newest);
+  }, [initialState]);
+
+  useEffect(
+    () =>
+      subscribeBrowserStore((next) => {
+        setState((current) => newerStore(current, next) ?? next);
+      }),
+    [],
+  );
+
   async function postRates(body: { providerId: string; sendRate?: number }) {
     setBusyId(body.providerId);
     setMessage(null);
@@ -34,6 +55,7 @@ export function AdminPanel({ initialState }: { initialState: RatesStoreState }) 
       const response = await fetch("/api/admin/rates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        cache: "no-store",
         body: JSON.stringify(body),
       });
       const payload = (await response.json()) as {
@@ -42,6 +64,7 @@ export function AdminPanel({ initialState }: { initialState: RatesStoreState }) 
       };
       if (payload.state) {
         setState(payload.state);
+        saveBrowserRates(payload.state);
       }
       if (!response.ok) {
         throw new Error(payload.error ?? "Refresh failed");
@@ -72,12 +95,15 @@ export function AdminPanel({ initialState }: { initialState: RatesStoreState }) 
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-600">
             Run each provider separately. The public heatmap only reads stored
-            quotes; it does not scrape provider sites.
+            quotes; it does not scrape provider sites. After a refresh, open
+            View heatmap in this browser — Vercel does not share those writes
+            across server instances.
           </p>
         </div>
         <div className="flex gap-2">
           <Link
             href="/"
+            prefetch={false}
             className="rounded-md border border-zinc-200 px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50"
           >
             View heatmap
