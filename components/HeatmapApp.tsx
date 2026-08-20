@@ -5,9 +5,10 @@ import { useMemo, useState } from "react";
 import { RateHeatmap, HEATMAP_NAME_COLUMN } from "@/components/RateHeatmap";
 import { ProviderLogo } from "@/components/ProviderLogo";
 import {
-  bestQuoteForAmount,
   formatCompactGbp,
   parseSendAmount,
+  topQuotesForAmount,
+  type BestSendPick,
 } from "@/lib/best-send";
 import type { ComparisonRates } from "@/lib/providers/types";
 
@@ -24,13 +25,50 @@ function formatLkr(amount: number) {
   }).format(Math.round(amount));
 }
 
+const RANK_BADGE = [
+  "bg-emerald-700 text-white",
+  "bg-zinc-600 text-white",
+  "bg-zinc-400 text-white",
+] as const;
+
+function RankedPick({ pick }: { pick: BestSendPick }) {
+  const badge = RANK_BADGE[pick.rank - 1] ?? RANK_BADGE[2];
+
+  return (
+    <div className="flex min-w-0 flex-1 items-center gap-2 px-2.5 py-1.5">
+      <span
+        className={`inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold tabular-nums ${badge}`}
+      >
+        {pick.rank}
+      </span>
+      <ProviderLogo id={pick.provider.id} name={pick.provider.name} size={24} />
+      <div className="min-w-0">
+        <p className="truncate text-xs font-semibold leading-tight text-zinc-900">
+          {pick.provider.name}
+        </p>
+        <p className="truncate font-mono text-[11px] tabular-nums text-zinc-500">
+          {formatRate(pick.quote.effectiveRate)}
+          <span className="text-zinc-300"> · </span>
+          {formatLkr(pick.estimatedLkr)} LKR
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export function HeatmapApp({ data }: { data: ComparisonRates }) {
   const [rawAmount, setRawAmount] = useState("1000");
   const amountGbp = parseSendAmount(rawAmount);
-  const pick = useMemo(
-    () => (amountGbp == null ? null : bestQuoteForAmount(data, amountGbp)),
+  const picks = useMemo(
+    () => (amountGbp == null ? [] : topQuotesForAmount(data, amountGbp)),
     [amountGbp, data],
   );
+  const snappedFrom =
+    amountGbp != null &&
+    picks[0] &&
+    picks[0].column.amountGbp !== amountGbp
+      ? formatCompactGbp(picks[0].column.amountGbp)
+      : null;
 
   return (
     <>
@@ -48,9 +86,9 @@ export function HeatmapApp({ data }: { data: ComparisonRates }) {
         </div>
 
         <div className="flex min-w-0 flex-1 items-center justify-between gap-3">
-          <div className="flex min-w-0 items-stretch overflow-hidden rounded-xl bg-zinc-50 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.08)]">
+          <div className="flex min-w-0 flex-1 items-stretch overflow-hidden rounded-xl bg-zinc-50 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.08)]">
             <form
-              className="flex items-center gap-1.5 py-1.5 pl-3 pr-2"
+              className="flex shrink-0 items-center gap-1.5 py-1.5 pl-3 pr-2"
               onSubmit={(event) => event.preventDefault()}
             >
               <label
@@ -76,53 +114,39 @@ export function HeatmapApp({ data }: { data: ComparisonRates }) {
 
             <div className="my-1.5 w-px shrink-0 bg-zinc-200" />
 
-            <div className="flex min-w-0 items-center gap-2 bg-white/80 py-1.5 pl-2.5 pr-3">
-              {pick ? (
-                <>
-                  <ProviderLogo
-                    id={pick.provider.id}
-                    name={pick.provider.name}
-                    size={28}
-                  />
-                  <div className="min-w-0">
-                    <p className="truncate text-xs leading-tight">
-                      <span className="font-semibold text-emerald-700">Best</span>
-                      <span className="text-zinc-300"> · </span>
-                      <span className="font-semibold text-zinc-900">
-                        {pick.provider.name}
-                      </span>
-                    </p>
-                    <p className="truncate font-mono text-[11px] tabular-nums text-zinc-500">
-                      {formatRate(pick.quote.effectiveRate)}
-                      <span className="text-zinc-300"> · </span>
-                      {formatLkr(pick.estimatedLkr)} LKR
-                      {amountGbp != null &&
-                      pick.column.amountGbp !== amountGbp ? (
-                        <span className="text-zinc-400">
-                          {` · from ${formatCompactGbp(pick.column.amountGbp)}`}
-                        </span>
-                      ) : null}
-                    </p>
-                  </div>
-                </>
+            <div className="flex min-w-0 flex-1 items-stretch divide-x divide-zinc-200 bg-white/80">
+              {picks.length > 0 ? (
+                picks.map((pick) => (
+                  <RankedPick key={pick.provider.id} pick={pick} />
+                ))
               ) : (
-                <p className="text-[11px] text-zinc-400">
-                  Type an amount to see the best rate
+                <p className="px-3 py-1.5 text-[11px] text-zinc-400">
+                  Type an amount to see the top rates
                 </p>
               )}
             </div>
           </div>
 
-          <Link
-            href="/admin"
-            className="shrink-0 rounded-md px-2.5 py-1 text-xs font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700"
-          >
-            Admin
-          </Link>
+          <div className="flex shrink-0 items-center gap-2">
+            {snappedFrom ? (
+              <span className="hidden text-[10px] text-zinc-400 sm:inline">
+                from {snappedFrom}
+              </span>
+            ) : null}
+            <Link
+              href="/admin"
+              className="rounded-md px-2.5 py-1 text-xs font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700"
+            >
+              Admin
+            </Link>
+          </div>
         </div>
       </header>
       <div className="min-h-0 min-w-0 flex-1 overflow-hidden px-3 pb-3 pt-2">
-        <RateHeatmap data={data} activeAmountGbp={pick?.column.amountGbp} />
+        <RateHeatmap
+          data={data}
+          activeAmountGbp={picks[0]?.column.amountGbp}
+        />
       </div>
     </>
   );

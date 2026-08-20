@@ -4,6 +4,7 @@ import {
   bestQuoteForAmount,
   formatCompactGbp,
   parseSendAmount,
+  topQuotesForAmount,
 } from "./best-send";
 import type { ComparisonRates, Quote } from "./providers/types";
 
@@ -51,6 +52,16 @@ function fixture(): ComparisonRates {
         asOf: null,
         quotes: [quote(500, 447.5), quote(1000, 447.5), quote(2000, 447.5)],
       },
+      {
+        id: "remitwire",
+        name: "RemitWire (BOC UK)",
+        sourceUrl: "https://bankofceylon.co.uk",
+        pair: "GBPLKR",
+        boardRate: 448,
+        rateKind: "buying",
+        asOf: null,
+        quotes: [quote(500, 445), quote(1000, 445.8), quote(2000, 446)],
+      },
     ],
   };
 }
@@ -94,6 +105,28 @@ describe("bestQuoteForAmount", () => {
   it("returns null for invalid amounts", () => {
     assert.equal(bestQuoteForAmount(fixture(), 0), null);
     assert.equal(bestQuoteForAmount(fixture(), Number.NaN), null);
+  });
+});
+
+describe("topQuotesForAmount", () => {
+  it("returns the top three providers as ranks 1, 2, and 3", () => {
+    const picks = topQuotesForAmount(fixture(), 1000);
+    assert.deepEqual(
+      picks.map((pick) => [pick.rank, pick.provider.id]),
+      [
+        [1, "taptap"],
+        [2, "wise"],
+        [3, "remitwire"],
+      ],
+    );
+  });
+
+  it("returns fewer ranks when a column has fewer quotes", () => {
+    const picks = topQuotesForAmount(fixture(), 2000);
+    assert.deepEqual(
+      picks.map((pick) => pick.provider.id),
+      ["taptap", "remitwire"],
+    );
   });
 });
 

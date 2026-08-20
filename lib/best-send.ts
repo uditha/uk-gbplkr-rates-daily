@@ -6,6 +6,7 @@ import type {
 } from "@/lib/providers/types";
 
 export type BestSendPick = {
+  rank: number;
   provider: ProviderSnapshot;
   quote: Quote;
   column: AmountColumn;
@@ -48,40 +49,50 @@ function columnsNearestFirst(amounts: AmountColumn[], amountGbp: number) {
     });
 }
 
-function bestAtColumn(data: ComparisonRates, columnIndex: number) {
-  let best: { provider: ProviderSnapshot; quote: Quote } | null = null;
+function compareQuotes(a: Quote, b: Quote) {
+  if (b.effectiveRate !== a.effectiveRate) {
+    return b.effectiveRate - a.effectiveRate;
+  }
+  return b.lkrReceived - a.lkrReceived;
+}
 
-  for (const provider of data.providers) {
-    const quote = provider.quotes[columnIndex];
-    if (!quote) continue;
-    if (
-      !best ||
-      quote.effectiveRate > best.quote.effectiveRate ||
-      (quote.effectiveRate === best.quote.effectiveRate &&
-        quote.lkrReceived > best.quote.lkrReceived)
-    ) {
-      best = { provider, quote };
-    }
+function rankedAtColumn(data: ComparisonRates, columnIndex: number) {
+  return data.providers
+    .map((provider) => ({
+      provider,
+      quote: provider.quotes[columnIndex],
+    }))
+    .filter(
+      (row): row is { provider: ProviderSnapshot; quote: Quote } =>
+        row.quote != null,
+    )
+    .sort((a, b) => compareQuotes(a.quote, b.quote));
+}
+
+export function topQuotesForAmount(
+  data: ComparisonRates,
+  amountGbp: number,
+  limit = 3,
+): BestSendPick[] {
+  if (!Number.isFinite(amountGbp) || amountGbp <= 0) return [];
+
+  for (const { column, index } of columnsNearestFirst(data.amounts, amountGbp)) {
+    const ranked = rankedAtColumn(data, index);
+    if (ranked.length === 0) continue;
+    return ranked.slice(0, limit).map((row, rank) => ({
+      ...row,
+      rank: rank + 1,
+      column,
+      estimatedLkr: row.quote.lkrReceived * (amountGbp / row.quote.amountGbp),
+    }));
   }
 
-  return best;
+  return [];
 }
 
 export function bestQuoteForAmount(
   data: ComparisonRates,
   amountGbp: number,
 ): BestSendPick | null {
-  if (!Number.isFinite(amountGbp) || amountGbp <= 0) return null;
-
-  for (const { column, index } of columnsNearestFirst(data.amounts, amountGbp)) {
-    const winner = bestAtColumn(data, index);
-    if (!winner) continue;
-    return {
-      ...winner,
-      column,
-      estimatedLkr: winner.quote.lkrReceived * (amountGbp / winner.quote.amountGbp),
-    };
-  }
-
-  return null;
+  return topQuotesForAmount(data, amountGbp, 1)[0] ?? null;
 }
