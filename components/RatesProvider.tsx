@@ -9,7 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { comparisonRatesFromStore } from "@/lib/providers";
+import { comparisonRatesFromStore } from "@/lib/providers/comparison";
 import type { ComparisonRates } from "@/lib/providers/types";
 import {
   loadBrowserStore,

@@ -1,4 +1,4 @@
-import { comparisonRatesFromStore } from "@/lib/providers";
+import { comparisonRatesFromStore } from "@/lib/providers/comparison";
 import type { ComparisonRates } from "@/lib/providers/types";
 import { isNewerStore } from "@/lib/store/snapshot";
 import type { RatesStoreState } from "@/lib/store/types";
