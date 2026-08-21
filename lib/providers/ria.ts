@@ -108,10 +108,6 @@ export function riaReceiveLkr(amountGbp: number, estimate: RiaEstimate): number 
   return Number((amountGbp * estimate.exchangeRate).toFixed(2));
 }
 
-export function riaTotalPaidGbp(amountGbp: number, estimate: RiaEstimate): number {
-  return amountGbp + estimate.transferFee;
-}
-
 export function quoteRiaAmount(
   amountGbp: number,
   estimate: RiaEstimate,
@@ -121,10 +117,13 @@ export function quoteRiaAmount(
   }
 
   const feeGbp = estimate.transferFee;
-  const netGbp = amountGbp;
-  const lkrReceived = riaReceiveLkr(amountGbp, estimate);
-  const totalPaidGbp = riaTotalPaidGbp(amountGbp, estimate);
-  const effectiveRate = lkrReceived / totalPaidGbp;
+  const netGbp = amountGbp - feeGbp;
+  if (netGbp <= 0) {
+    return null;
+  }
+
+  const lkrReceived = riaReceiveLkr(netGbp, estimate);
+  const effectiveRate = lkrReceived / amountGbp;
 
   return {
     amountGbp,

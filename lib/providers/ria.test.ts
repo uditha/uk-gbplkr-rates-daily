@@ -8,7 +8,6 @@ import {
   parseRiaEstimate,
   quoteRiaAmount,
   riaReceiveLkr,
-  riaTotalPaidGbp,
 } from "./ria";
 
 const fixturePath = join(
@@ -50,7 +49,7 @@ describe("riaReceiveLkr", () => {
 });
 
 describe("quoteRiaAmount", () => {
-  it("uses the standard rate and adds any transfer fee on top", () => {
+  it("converts the full send amount at the standard rate when there is no fee", () => {
     const quote = quoteRiaAmount(300, fixtureEstimate());
     assert.ok(quote);
     assert.equal(quote.feeGbp, 0);
@@ -59,13 +58,14 @@ describe("quoteRiaAmount", () => {
     assert.equal(quote.effectiveRate, 448);
   });
 
-  it("still applies leftover fee on top without using the welcome receive amount", () => {
+  it("deducts the transfer fee then converts the remainder, ignoring the welcome rate", () => {
     const estimate = { ...fixtureEstimate(), transferFee: 2.9 };
-    assert.equal(riaTotalPaidGbp(300, estimate), 302.9);
     const quote = quoteRiaAmount(300, estimate);
     assert.ok(quote);
-    assert.equal(quote.lkrReceived, 134400);
-    assert.equal(quote.effectiveRate, 134400 / 302.9);
+    assert.equal(quote.feeGbp, 2.9);
+    assert.equal(quote.netGbp, 297.1);
+    assert.equal(quote.lkrReceived, 133100.8);
+    assert.equal(quote.effectiveRate, 133100.8 / 300);
   });
 
   it("drops amounts above the published send limit", () => {
