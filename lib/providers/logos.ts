@@ -16,7 +16,6 @@ export const PROVIDER_LOGOS: Record<string, ProviderLogoSpec> = {
   "revolut-standard": { src: "/providers/revolut.svg", fit: "cover" },
   "remitly-standard": { src: "/providers/remitly.png", fit: "cover" },
   "western-union-bank": { src: "/providers/western-union.svg", fit: "cover" },
-  "wu-cash-pickup-sl": { src: "/providers/western-union.svg", fit: "cover" },
   "ria-money-transfer": { src: "/providers/ria.svg", fit: "cover" },
 };
 

@@ -364,7 +364,3 @@ async function fetchWuSnapshot(payout: WuPayout): Promise<ProviderSnapshot> {
 export async function fetchWuBankSnapshot(): Promise<ProviderSnapshot> {
   return fetchWuSnapshot("bank");
 }
-
-export async function fetchWuCashSnapshot(): Promise<ProviderSnapshot> {
-  return fetchWuSnapshot("cash");
-}
