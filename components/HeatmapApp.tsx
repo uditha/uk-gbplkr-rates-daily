@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { RateHeatmap, HEATMAP_NAME_COLUMN } from "@/components/RateHeatmap";
 import { ProviderLogo } from "@/components/ProviderLogo";
 import { useRatesStore } from "@/components/RatesProvider";
@@ -63,44 +63,29 @@ export function HeatmapApp() {
   const { rates: data, state, replaceState } = useRatesStore();
   const [rawAmount, setRawAmount] = useState("1000");
   const [refreshing, setRefreshing] = useState(false);
+  const refreshAttempted = useRef(false);
 
   useEffect(() => {
-    if (!isStoreStale(state)) return;
+    if (refreshAttempted.current || !isStoreStale(state)) return;
+    refreshAttempted.current = true;
+    setRefreshing(true);
 
-    let cancelled = false;
-
-    async function refreshStoredRates() {
-      setRefreshing(true);
+    void (async () => {
       try {
-        for (let attempt = 0; attempt < 8 && !cancelled; attempt += 1) {
-          const response = await fetch("/api/rates/refresh", {
-            method: "POST",
-            cache: "no-store",
-          });
-          const payload = (await response.json()) as {
-            state?: RatesStoreState;
-            skipped?: "fresh" | "locked" | null;
-          };
-          if (payload.skipped === "locked") {
-            await new Promise((resolve) => setTimeout(resolve, 4000));
-            continue;
-          }
-          if (payload.state && !cancelled) {
-            replaceState(payload.state);
-          }
-          break;
-        }
+        const response = await fetch("/api/rates/refresh", {
+          method: "POST",
+          cache: "no-store",
+        });
+        const payload = (await response.json()) as {
+          state?: RatesStoreState;
+        };
+        if (payload.state) replaceState(payload.state);
       } catch {
         // Keep showing whatever quotes are already stored.
       } finally {
-        if (!cancelled) setRefreshing(false);
+        setRefreshing(false);
       }
-    }
-
-    void refreshStoredRates();
-    return () => {
-      cancelled = true;
-    };
+    })();
   }, [replaceState, state]);
 
   const amountGbp = parseSendAmount(rawAmount);
@@ -127,13 +112,13 @@ export function HeatmapApp() {
             UK → Sri Lanka
           </h1>
           <p className="hidden truncate text-[11px] text-zinc-500 sm:block">
-            {refreshing
-              ? "Updating rates…"
-              : data?.fetchedAt
-                ? `Updated ${new Date(data.fetchedAt).toLocaleTimeString("en-GB", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}`
+            {data?.fetchedAt
+              ? `Updated ${new Date(data.fetchedAt).toLocaleTimeString("en-GB", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}`
+              : refreshing
+                ? "Updating rates…"
                 : "Effective LKR per £1"}
           </p>
         </div>
