@@ -1,9 +1,10 @@
 import { comparisonRatesFromStore } from "@/lib/providers/comparison";
+import { withoutRetiredProviders } from "@/lib/providers/retired";
 import type { ComparisonRates } from "@/lib/providers/types";
 import { isNewerStore } from "@/lib/store/snapshot";
 import type { RatesStoreState } from "@/lib/store/types";
 
-export const BROWSER_RATES_KEY = "uk-gbplkr-store-v1";
+export const BROWSER_RATES_KEY = "uk-gbplkr-store-v2";
 const STORE_EVENT = "uk-gbplkr-store";
 
 function isStoreState(value: unknown): value is RatesStoreState {
@@ -30,7 +31,7 @@ export function loadBrowserStore(): RatesStoreState | null {
     const raw = window.localStorage.getItem(BROWSER_RATES_KEY);
     if (!raw) return null;
     const parsed: unknown = JSON.parse(raw);
-    return isStoreState(parsed) ? parsed : null;
+    return isStoreState(parsed) ? withoutRetiredProviders(parsed) : null;
   } catch {
     return null;
   }
@@ -77,7 +78,7 @@ export function subscribeBrowserStore(
     if (event.key !== BROWSER_RATES_KEY || !event.newValue) return;
     try {
       const parsed: unknown = JSON.parse(event.newValue);
-      if (isStoreState(parsed)) onChange(parsed);
+      if (isStoreState(parsed)) onChange(withoutRetiredProviders(parsed));
     } catch {
       // ignore malformed values
     }
@@ -85,7 +86,7 @@ export function subscribeBrowserStore(
 
   const handleCustom = (event: Event) => {
     const detail = (event as CustomEvent<unknown>).detail;
-    if (isStoreState(detail)) onChange(detail);
+    if (isStoreState(detail)) onChange(withoutRetiredProviders(detail));
   };
 
   window.addEventListener("storage", handleStorage);

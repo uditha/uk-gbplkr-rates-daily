@@ -1,4 +1,5 @@
 import { SEND_AMOUNTS } from "./amounts";
+import { isRetiredProviderId } from "./retired";
 import type { ComparisonRates } from "./types";
 import type { RatesStoreState } from "@/lib/store/types";
 
@@ -6,6 +7,7 @@ export function comparisonRatesFromStore(
   store: RatesStoreState,
 ): ComparisonRates | null {
   const providers = store.providers
+    .filter((record) => !isRetiredProviderId(record.id))
     .map((record) => record.snapshot)
     .filter((snapshot) => snapshot != null);
 
