@@ -33,26 +33,28 @@ describe("parseWuCatalog", () => {
 });
 
 describe("selectWuPayGroup", () => {
-  it("prefers Pay by bank over other UK pay-ins", () => {
+  it("uses Faster Payments Direct to Bank, not Pay by bank Best FX", () => {
     const catalog = fixtureCatalog();
-    assert.equal(selectWuPayGroup(catalog, WU_BANK_SERVICE).fundsIn, "PA");
+    const bank = selectWuPayGroup(catalog, WU_BANK_SERVICE);
+    assert.equal(bank.fundsIn, "EB");
+    assert.equal(bank.fxRate, 438.5962474);
     assert.equal(selectWuPayGroup(catalog, WU_CASH_SERVICE).fundsIn, "PA");
   });
 
-  it("falls back to bank transfer when Pay by bank is missing", () => {
+  it("falls back to bank transfer when Faster Payments is missing", () => {
     const catalog = fixtureCatalog();
     const bank = catalog.services.find((service) => service.service === "500");
     assert.ok(bank);
-    const withoutPa: WuCatalog = {
+    const withoutEb: WuCatalog = {
       ...catalog,
       services: [
         {
           ...bank,
-          payGroups: bank.payGroups.filter((group) => group.fundsIn !== "PA"),
+          payGroups: bank.payGroups.filter((group) => group.fundsIn !== "EB"),
         },
       ],
     };
-    assert.equal(selectWuPayGroup(withoutPa, WU_BANK_SERVICE).fundsIn, "EB");
+    assert.equal(selectWuPayGroup(withoutEb, WU_BANK_SERVICE).fundsIn, "TR");
   });
 
   it("ignores Direct to Card even when it has a higher FX rate", () => {
@@ -67,6 +69,7 @@ describe("selectWuPayGroup", () => {
           payGroups: [
             {
               ...bank,
+              fundsIn: "PA",
               fxRate: 456.6247,
               receiveAmount: 136987.41,
             },
@@ -76,8 +79,8 @@ describe("selectWuPayGroup", () => {
       ],
     };
     const group = selectWuPayGroup(withCard, WU_BANK_SERVICE);
-    assert.equal(group.fxRate, 448.1680713);
-    assert.equal(group.fundsIn, "PA");
+    assert.equal(group.fxRate, 438.5962474);
+    assert.equal(group.fundsIn, "EB");
   });
 });
 
@@ -88,8 +91,8 @@ describe("quoteFromWuPayGroup", () => {
     assert.ok(quote);
     assert.equal(quote.feeGbp, 0.99);
     assert.equal(quote.netGbp, 300);
-    assert.equal(quote.lkrReceived, 134450.42);
-    assert.equal(quote.effectiveRate, 134450.42 / 300.99);
+    assert.equal(quote.lkrReceived, 131578.87);
+    assert.equal(quote.effectiveRate, 131578.87 / 300.99);
   });
 
   it("uses the cash-pickup FX rate and fee", () => {
@@ -118,9 +121,9 @@ describe("buildWuSnapshot", () => {
     assert.equal(bank.id, "western-union-bank");
     assert.equal(bank.name, "Western Union (bank)");
     assert.equal(cash.id, "wu-cash-pickup-sl");
-    assert.equal(bank.boardRate, 448.1680713);
+    assert.equal(bank.boardRate, 438.5962474);
     assert.equal(cash.boardRate, 421.781385);
-    assert.equal(bank.quotes[0]?.lkrReceived, 134450.42);
+    assert.equal(bank.quotes[0]?.lkrReceived, 131578.87);
     assert.equal(cash.quotes[0]?.lkrReceived, 126534.42);
   });
 });

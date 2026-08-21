@@ -17,7 +17,8 @@ export const WU_CASH_SERVICE = "000";
 
 const USER_AGENT = BROWSER_USER_AGENT;
 
-const PREFERRED_FUNDS_IN = ["PA", "EB", "TR"] as const;
+const BANK_FUNDS_IN = ["EB", "TR"] as const;
+const CASH_FUNDS_IN = ["PA", "EB", "TR"] as const;
 const CATALOG_CACHE_MS = 90_000;
 
 export type WuPayGroup = {
@@ -108,7 +109,7 @@ export function parseWuCatalog(payload: unknown): WuCatalog {
           throw new Error(`Western Union pay-in ${index}.${payIndex} was incomplete`);
         }
         return {
-          fundsIn: readString(payGroup.fund_in),
+          fundsIn: readString(payGroup.fund_in ?? payGroup.funds_in),
           fxRate: readNumber(payGroup.fx_rate, `fx rate ${index}.${payIndex}`),
           sendAmount: readNumber(
             payGroup.send_amount,
@@ -161,9 +162,12 @@ export function selectWuPayGroup(
     );
   }
 
-  // Standard UK bank transfer: Pay by bank (PA), then Faster Payments (EB), then TR.
-  // Ignore Direct to Card, cards (CC), and any promotional headline FX.
-  for (const fundsIn of PREFERRED_FUNDS_IN) {
+  // Direct to Bank uses Faster Payments / bank transfer (EB, then TR).
+  // Pay by bank (PA) is WU's "Best FX" headline and is ignored, as are cards
+  // (CC) and Direct to Card.
+  const preferred =
+    service === WU_BANK_SERVICE ? BANK_FUNDS_IN : CASH_FUNDS_IN;
+  for (const fundsIn of preferred) {
     const match = group.payGroups.find((payGroup) => payGroup.fundsIn === fundsIn);
     if (match) return match;
   }
