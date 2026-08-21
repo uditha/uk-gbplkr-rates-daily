@@ -5,12 +5,21 @@ import {
   refreshProvider,
   refreshWiredProviders,
 } from "@/lib/store/refresh";
+import { isDeskAuthenticated } from "@/lib/desk-session";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const preferredRegion = "lhr1";
 
+async function unauthorized() {
+  return Response.json(
+    { error: "Unauthorized" },
+    { status: 401, headers: { "Cache-Control": "no-store" } },
+  );
+}
+
 export async function GET() {
+  if (!(await isDeskAuthenticated())) return unauthorized();
   const state = await loadStore();
   return Response.json(state, {
     headers: { "Cache-Control": "no-store" },
@@ -18,6 +27,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!(await isDeskAuthenticated())) return unauthorized();
   try {
     const body = (await request.json()) as {
       providerId?: string;

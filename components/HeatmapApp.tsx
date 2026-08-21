@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useMemo, useState } from "react";
 import { RateHeatmap, HEATMAP_NAME_COLUMN } from "@/components/RateHeatmap";
 import { ProviderLogo } from "@/components/ProviderLogo";
@@ -143,12 +142,6 @@ export function HeatmapApp() {
                 from {snappedFrom}
               </span>
             ) : null}
-            <Link
-              href="/admin"
-              className="rounded-md px-2.5 py-1 text-xs font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700"
-            >
-              Admin
-            </Link>
           </div>
         </div>
       </header>
@@ -161,11 +154,7 @@ export function HeatmapApp() {
         ) : (
           <div className="flex h-full items-center justify-center p-6 text-center">
             <p className="max-w-md text-sm text-zinc-600">
-              No stored rates yet. Refresh a provider from{" "}
-              <Link className="underline" href="/admin">
-                /admin
-              </Link>
-              .
+              No stored rates yet.
             </p>
           </div>
         )}

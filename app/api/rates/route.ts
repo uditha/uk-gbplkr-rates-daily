@@ -8,7 +8,7 @@ export async function GET() {
   const rates = await getComparisonRates();
   if (!rates) {
     return Response.json(
-      { error: "No stored rates yet. Refresh a provider from /admin." },
+      { error: "No stored rates yet." },
       { status: 404, headers: { "Cache-Control": "no-store" } },
     );
   }
