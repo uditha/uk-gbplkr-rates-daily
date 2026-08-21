@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-21T08:54:52.643Z",
+  "updatedAt": "2026-08-21T09:10:19.548Z",
   "providers": [
     {
       "id": "remitwire-boc-uk",
@@ -123,112 +123,112 @@
       "wired": true,
       "sourceUrl": "https://www.globalexchange.co.uk/Send-Money-to-SriLanka",
       "status": "ok",
-      "updatedAt": "2026-08-20T11:53:12.991Z",
+      "updatedAt": "2026-08-21T09:10:19.548Z",
       "error": null,
       "snapshot": {
         "id": "global-exchange-smart",
         "name": "Global Exchange (Smart)",
         "sourceUrl": "https://www.globalexchange.co.uk/Send-Money-to-SriLanka",
         "pair": "GBPLKR",
-        "boardRate": 450,
+        "boardRate": 451,
         "rateKind": "send",
-        "asOf": "20/08/2026",
+        "asOf": "21/08/2026",
         "quotes": [
           {
             "amountGbp": 300,
             "feeGbp": 3,
             "netGbp": 297,
-            "lkrReceived": 133650,
-            "effectiveRate": 445.5,
-            "behindBoardRate": 4.5
+            "lkrReceived": 133947,
+            "effectiveRate": 446.49,
+            "behindBoardRate": 4.509999999999991
           },
           {
             "amountGbp": 500,
             "feeGbp": 3,
             "netGbp": 497,
-            "lkrReceived": 223650,
-            "effectiveRate": 447.3,
-            "behindBoardRate": 2.6999999999999886
+            "lkrReceived": 224147,
+            "effectiveRate": 448.294,
+            "behindBoardRate": 2.7060000000000173
           },
           {
             "amountGbp": 1000,
             "feeGbp": 3,
             "netGbp": 997,
-            "lkrReceived": 448650,
-            "effectiveRate": 448.65,
-            "behindBoardRate": 1.3500000000000227
+            "lkrReceived": 449647,
+            "effectiveRate": 449.647,
+            "behindBoardRate": 1.3530000000000086
           },
           {
             "amountGbp": 2000,
             "feeGbp": 5,
             "netGbp": 1995,
-            "lkrReceived": 897750,
-            "effectiveRate": 448.875,
-            "behindBoardRate": 1.125
+            "lkrReceived": 899745,
+            "effectiveRate": 449.8725,
+            "behindBoardRate": 1.1274999999999977
           },
           {
             "amountGbp": 2500,
             "feeGbp": 5,
             "netGbp": 2495,
-            "lkrReceived": 1122750,
-            "effectiveRate": 449.1,
-            "behindBoardRate": 0.8999999999999773
+            "lkrReceived": 1125245,
+            "effectiveRate": 450.098,
+            "behindBoardRate": 0.9019999999999868
           },
           {
             "amountGbp": 5000,
             "feeGbp": 5,
             "netGbp": 4995,
-            "lkrReceived": 2247750,
-            "effectiveRate": 449.55,
-            "behindBoardRate": 0.44999999999998863
+            "lkrReceived": 2252745,
+            "effectiveRate": 450.549,
+            "behindBoardRate": 0.45100000000002183
           },
           {
             "amountGbp": 10000,
             "feeGbp": 5,
             "netGbp": 9995,
-            "lkrReceived": 4497750,
-            "effectiveRate": 449.775,
-            "behindBoardRate": 0.22500000000002274
+            "lkrReceived": 4507745,
+            "effectiveRate": 450.7745,
+            "behindBoardRate": 0.22550000000001091
           },
           {
             "amountGbp": 15000,
             "feeGbp": 5,
             "netGbp": 14995,
-            "lkrReceived": 6747750,
-            "effectiveRate": 449.85,
-            "behindBoardRate": 0.14999999999997726
+            "lkrReceived": 6762745,
+            "effectiveRate": 450.8496666666667,
+            "behindBoardRate": 0.15033333333332166
           },
           {
             "amountGbp": 20000,
             "feeGbp": 5,
             "netGbp": 19995,
-            "lkrReceived": 8997750,
-            "effectiveRate": 449.8875,
-            "behindBoardRate": 0.11250000000001137
+            "lkrReceived": 9017745,
+            "effectiveRate": 450.88725,
+            "behindBoardRate": 0.11275000000000546
           },
           {
             "amountGbp": 25000,
             "feeGbp": 5,
             "netGbp": 24995,
-            "lkrReceived": 11247750,
-            "effectiveRate": 449.91,
-            "behindBoardRate": 0.08999999999997499
+            "lkrReceived": 11272745,
+            "effectiveRate": 450.9098,
+            "behindBoardRate": 0.09019999999998163
           },
           {
             "amountGbp": 50000,
             "feeGbp": 5,
             "netGbp": 49995,
-            "lkrReceived": 22497750,
-            "effectiveRate": 449.955,
-            "behindBoardRate": 0.045000000000015916
+            "lkrReceived": 22547745,
+            "effectiveRate": 450.9549,
+            "behindBoardRate": 0.045099999999990814
           },
           {
             "amountGbp": 100000,
             "feeGbp": 5,
             "netGbp": 99995,
-            "lkrReceived": 44997750,
-            "effectiveRate": 449.9775,
-            "behindBoardRate": 0.022499999999979536
+            "lkrReceived": 45097745,
+            "effectiveRate": 450.97745,
+            "behindBoardRate": 0.02255000000002383
           }
         ]
       }

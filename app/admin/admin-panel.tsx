@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment, useState } from "react";
-import { GLOBAL_EXCHANGE_PROVIDER_ID } from "@/lib/providers/global-exchange";
+import { GLOBAL_EXCHANGE_PROVIDER_ID } from "@/lib/providers/global-exchange-meta";
 import type { ProviderRecord, RatesStoreState } from "@/lib/store/types";
 import { ProviderLogo } from "@/components/ProviderLogo";
 import { useRatesStore } from "@/components/RatesProvider";
@@ -198,8 +198,10 @@ export function AdminPanel() {
                         }}
                       >
                         <p className="w-full text-xs text-zinc-600">
-                          Server fetch is blocked by their site. Open the page,
-                          copy the number next to{" "}
+                          Refresh tries their live GBP/LKR calculator, then the
+                          Sri Lanka page. If Cloudflare blocks this server, it
+                          reads that page another way. If that still fails, copy
+                          the number next to{" "}
                           <span className="font-medium">1 GBP = … LKR</span>,
                           then save it here.
                         </p>

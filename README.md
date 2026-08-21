@@ -18,10 +18,12 @@ npm run refresh remitwire-boc-uk # one provider
 
 ## Global Exchange
 
-1. Read **1 GBP = … LKR** from [globalexchange.co.uk/Send-Money-to-SriLanka](https://www.globalexchange.co.uk/Send-Money-to-SriLanka)
-2. Fee is **£3** up to £1,000 and **£5** above that, deducted from the send amount
-3. `LKR received = (amount − fee) × send rate`
-4. `Effective rate = LKR received ÷ amount`
+1. Prefer the live GBP/LKR calculator at [globalexchange.co.uk](https://www.globalexchange.co.uk/) (`POST /calculate_currency`)
+2. If that is blocked, read **1 GBP = … LKR** from [the Sri Lanka page](https://www.globalexchange.co.uk/Send-Money-to-SriLanka)
+3. If Cloudflare blocks Vercel, read that same page through a public HTML reader, or paste the rate on `/admin`
+4. Fee is **£3** up to £1,000 and **£5** above that, deducted from the send amount
+5. `LKR received = (amount − fee) × send rate`
+6. `Effective rate = LKR received ÷ amount`
 
 ```bash
 npm run refresh global-exchange-smart
