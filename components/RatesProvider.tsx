@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { comparisonRatesFromStore } from "@/lib/providers/comparison";
+import { withoutRetiredProviders } from "@/lib/providers/retired";
 import type { ComparisonRates } from "@/lib/providers/types";
 import {
   loadBrowserStore,
@@ -41,8 +42,9 @@ export function RatesProvider({
 
   useLayoutEffect(() => {
     setState((current) => {
-      const merged =
-        mergeStores(initialState, current, loadBrowserStore()) ?? current;
+      const merged = withoutRetiredProviders(
+        mergeStores(initialState, current, loadBrowserStore()) ?? current,
+      );
       saveBrowserRates(merged);
       return merged;
     });
@@ -51,14 +53,18 @@ export function RatesProvider({
   useLayoutEffect(
     () =>
       subscribeBrowserStore((next) => {
-        setState((current) => mergeStores(current, next) ?? next);
+        setState((current) =>
+          withoutRetiredProviders(mergeStores(current, next) ?? next),
+        );
       }),
     [],
   );
 
   const replaceState = useCallback((next: RatesStoreState) => {
     setState((current) => {
-      const merged = mergeStores(current, next) ?? next;
+      const merged = withoutRetiredProviders(
+        mergeStores(current, next) ?? next,
+      );
       saveBrowserRates(merged);
       return merged;
     });
