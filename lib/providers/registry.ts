@@ -38,11 +38,8 @@ import {
 import {
   WU_BANK_PROVIDER_ID,
   WU_BANK_PROVIDER_NAME,
-  WU_CASH_PROVIDER_ID,
-  WU_CASH_PROVIDER_NAME,
   WU_RATES_URL,
   fetchWuBankSnapshot,
-  fetchWuCashSnapshot,
 } from "./western-union";
 import {
   RIA_PROVIDER_ID,
@@ -100,12 +97,6 @@ export const PROVIDER_REGISTRY: ProviderDefinition[] = [
     name: WU_BANK_PROVIDER_NAME,
     sourceUrl: WU_RATES_URL,
     fetchSnapshot: fetchWuBankSnapshot,
-  },
-  {
-    id: WU_CASH_PROVIDER_ID,
-    name: WU_CASH_PROVIDER_NAME,
-    sourceUrl: WU_RATES_URL,
-    fetchSnapshot: fetchWuCashSnapshot,
   },
   {
     id: RIA_PROVIDER_ID,
