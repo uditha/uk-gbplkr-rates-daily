@@ -198,10 +198,10 @@ export function AdminPanel() {
                         }}
                       >
                         <p className="w-full text-xs text-zinc-600">
-                          Server fetch is blocked by their site. Open the page,
-                          copy the number next to{" "}
-                          <span className="font-medium">1 GBP = … LKR</span>,
-                          then save it here.
+                          Server fetch may be blocked by their site. Use the
+                          homepage calculator figure next to{" "}
+                          <span className="font-medium">1 GBP = … LKR</span>
+                          , not a converted leftover amount, then save it here.
                         </p>
                         <label className="flex flex-col gap-1 text-xs text-zinc-600">
                           LKR per £1
