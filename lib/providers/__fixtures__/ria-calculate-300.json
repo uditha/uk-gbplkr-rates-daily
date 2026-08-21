@@ -6,7 +6,7 @@
         "countryTo": "LK",
         "currencyTo": "LKR",
         "currencyFrom": "GBP",
-        "paymentMethod": "BankAccount",
+        "paymentMethod": "DebitCard",
         "deliveryMethod": "BankDeposit",
         "amountFrom": 300.0,
         "promoId": 0,
@@ -15,10 +15,10 @@
       "calculations": {
         "amountTo": 137512.48,
         "amountFrom": 300.0,
-        "totalFeesAndTaxes": 0.0,
-        "totalAmount": 300.0,
+        "totalFeesAndTaxes": 2.9,
+        "totalAmount": 302.9,
         "exchangeRate": 448.0,
-        "transferFee": 0.0,
+        "transferFee": 2.9,
         "sendAmountLimit": {
           "minimumSendFromAmount": 1.0,
           "maximumSendFromAmount": 8000.0,

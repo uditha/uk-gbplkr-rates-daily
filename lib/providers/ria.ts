@@ -9,6 +9,7 @@ export const RIA_CALCULATE_URL =
   "https://public.riamoneytransfer.com/MoneyTransferCalculator/Calculate";
 export const RIA_PROVIDER_ID = "ria-money-transfer";
 export const RIA_PROVIDER_NAME = "Ria Money Transfer";
+export const RIA_PAYMENT_METHOD = "DebitCard";
 
 const USER_AGENT = BROWSER_USER_AGENT;
 
@@ -108,10 +109,6 @@ export function riaReceiveLkr(amountGbp: number, estimate: RiaEstimate): number 
   return Number((amountGbp * estimate.exchangeRate).toFixed(2));
 }
 
-export function riaTotalPaidGbp(amountGbp: number, estimate: RiaEstimate): number {
-  return amountGbp + estimate.transferFee;
-}
-
 export function quoteRiaAmount(
   amountGbp: number,
   estimate: RiaEstimate,
@@ -121,10 +118,13 @@ export function quoteRiaAmount(
   }
 
   const feeGbp = estimate.transferFee;
-  const netGbp = amountGbp;
-  const lkrReceived = riaReceiveLkr(amountGbp, estimate);
-  const totalPaidGbp = riaTotalPaidGbp(amountGbp, estimate);
-  const effectiveRate = lkrReceived / totalPaidGbp;
+  const netGbp = amountGbp - feeGbp;
+  if (netGbp <= 0) {
+    return null;
+  }
+
+  const lkrReceived = riaReceiveLkr(netGbp, estimate);
+  const effectiveRate = lkrReceived / amountGbp;
 
   return {
     amountGbp,
@@ -207,7 +207,7 @@ async function fetchRiaCalculateOnce(
         amountFrom: amountGbp,
         currencyTo: "LKR",
         currencyFrom: "GBP",
-        paymentMethod: "BankAccount",
+        paymentMethod: RIA_PAYMENT_METHOD,
         deliveryMethod: "BankDeposit",
         promoId: 0,
         shouldCalcAmountFrom: false,
@@ -218,8 +218,10 @@ async function fetchRiaCalculateOnce(
   });
 }
 
-export async function fetchRiaEstimate(amountGbp = 300): Promise<RiaEstimate> {
-  const token = await fetchRiaSessionToken();
+async function fetchRiaEstimateWithToken(
+  token: string,
+  amountGbp: number,
+): Promise<RiaEstimate> {
   let lastError = "Ria calculator failed";
   for (let attempt = 0; attempt < 4; attempt += 1) {
     const response = await fetchRiaCalculateOnce(token, amountGbp);
@@ -238,8 +240,32 @@ export async function fetchRiaEstimate(amountGbp = 300): Promise<RiaEstimate> {
   throw new Error(lastError);
 }
 
+export async function fetchRiaEstimate(amountGbp = 300): Promise<RiaEstimate> {
+  return fetchRiaEstimateWithToken(await fetchRiaSessionToken(), amountGbp);
+}
+
 export async function fetchRiaSnapshot(): Promise<ProviderSnapshot> {
-  const estimate = await fetchRiaEstimate(300);
+  const token = await fetchRiaSessionToken();
+  const first = await fetchRiaEstimateWithToken(token, SEND_AMOUNTS[0].amountGbp);
+  const rest = await Promise.all(
+    SEND_AMOUNTS.slice(1).map((column) =>
+      column.amountGbp > first.maxSendGbp
+        ? Promise.resolve(null)
+        : fetchRiaEstimateWithToken(token, column.amountGbp),
+    ),
+  );
   const asOf = new Date().toLocaleDateString("en-GB");
-  return buildRiaSnapshot(estimate, asOf);
+  const quotes = [first, ...rest].map((estimate, index) =>
+    estimate ? quoteRiaAmount(SEND_AMOUNTS[index].amountGbp, estimate) : null,
+  );
+  return {
+    id: RIA_PROVIDER_ID,
+    name: RIA_PROVIDER_NAME,
+    sourceUrl: RIA_RATES_URL,
+    pair: "GBPLKR",
+    boardRate: first.exchangeRate,
+    rateKind: "send",
+    asOf,
+    quotes,
+  };
 }
