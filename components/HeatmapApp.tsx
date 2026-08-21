@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { RateHeatmap, HEATMAP_NAME_COLUMN } from "@/components/RateHeatmap";
 import { ProviderLogo } from "@/components/ProviderLogo";
 import { useRatesStore } from "@/components/RatesProvider";
@@ -10,6 +10,8 @@ import {
   topQuotesForAmount,
   type BestSendPick,
 } from "@/lib/best-send";
+import { isStoreStale } from "@/lib/store/freshness";
+import type { RatesStoreState } from "@/lib/store/types";
 
 function formatRate(rate: number) {
   return rate.toFixed(2);
@@ -58,8 +60,48 @@ function RankedPick({ pick }: { pick: BestSendPick }) {
 }
 
 export function HeatmapApp() {
-  const { rates: data } = useRatesStore();
+  const { rates: data, state, replaceState } = useRatesStore();
   const [rawAmount, setRawAmount] = useState("1000");
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    if (!isStoreStale(state)) return;
+
+    let cancelled = false;
+
+    async function refreshStoredRates() {
+      setRefreshing(true);
+      try {
+        for (let attempt = 0; attempt < 8 && !cancelled; attempt += 1) {
+          const response = await fetch("/api/rates/refresh", {
+            method: "POST",
+            cache: "no-store",
+          });
+          const payload = (await response.json()) as {
+            state?: RatesStoreState;
+            skipped?: "fresh" | "locked" | null;
+          };
+          if (payload.skipped === "locked") {
+            await new Promise((resolve) => setTimeout(resolve, 4000));
+            continue;
+          }
+          if (payload.state && !cancelled) {
+            replaceState(payload.state);
+          }
+          break;
+        }
+      } catch {
+        // Keep showing whatever quotes are already stored.
+      } finally {
+        if (!cancelled) setRefreshing(false);
+      }
+    }
+
+    void refreshStoredRates();
+    return () => {
+      cancelled = true;
+    };
+  }, [replaceState, state]);
 
   const amountGbp = parseSendAmount(rawAmount);
   const picks = useMemo(
@@ -85,12 +127,14 @@ export function HeatmapApp() {
             UK → Sri Lanka
           </h1>
           <p className="hidden truncate text-[11px] text-zinc-500 sm:block">
-            {data?.fetchedAt
-              ? `Updated ${new Date(data.fetchedAt).toLocaleTimeString("en-GB", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}`
-              : "Effective LKR per £1"}
+            {refreshing
+              ? "Updating rates…"
+              : data?.fetchedAt
+                ? `Updated ${new Date(data.fetchedAt).toLocaleTimeString("en-GB", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}`
+                : "Effective LKR per £1"}
           </p>
         </div>
 
@@ -154,7 +198,7 @@ export function HeatmapApp() {
         ) : (
           <div className="flex h-full items-center justify-center p-6 text-center">
             <p className="max-w-md text-sm text-zinc-600">
-              No stored rates yet.
+              {refreshing ? "Updating rates…" : "No stored rates yet."}
             </p>
           </div>
         )}

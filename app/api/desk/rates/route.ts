@@ -10,6 +10,7 @@ import { isDeskAuthenticated } from "@/lib/desk-session";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const preferredRegion = "lhr1";
+export const maxDuration = 60;
 
 async function unauthorized() {
   return Response.json(
