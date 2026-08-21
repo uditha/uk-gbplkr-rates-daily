@@ -41,20 +41,20 @@ export function RatesProvider({
 
   useLayoutEffect(() => {
     setState((current) => {
-      const merged =
-        mergeStores(initialState, current, loadBrowserStore()) ?? current;
+      const merged = sharedStore
+        ? mergeStores(current, initialState) ?? initialState
+        : mergeStores(initialState, current, loadBrowserStore()) ?? current;
       saveBrowserRates(merged);
       return merged;
     });
-  }, [initialState]);
+  }, [initialState, sharedStore]);
 
-  useLayoutEffect(
-    () =>
-      subscribeBrowserStore((next) => {
-        setState((current) => mergeStores(current, next) ?? next);
-      }),
-    [],
-  );
+  useLayoutEffect(() => {
+    if (sharedStore) return;
+    return subscribeBrowserStore((next) => {
+      setState((current) => mergeStores(current, next) ?? next);
+    });
+  }, [sharedStore]);
 
   const replaceState = useCallback((next: RatesStoreState) => {
     setState((current) => {

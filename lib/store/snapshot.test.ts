@@ -101,7 +101,7 @@ test("mergeStores keeps a newer Remitly quote over a stale heatmap snapshot", ()
   assert.equal(merged.updatedAt, "2026-08-20T09:10:00.000Z");
 });
 
-test("mergeStores does not let a later Remitly 429 replace a successful quote", () => {
+test("mergeStores keeps a successful quote when a later error has no snapshot", () => {
   const success: RatesStoreState = {
     updatedAt: "2026-08-20T09:10:00.000Z",
     providers: [record("remitly-standard", "2026-08-20T09:10:00.000Z", 452.4)],
@@ -109,7 +109,10 @@ test("mergeStores does not let a later Remitly 429 replace a successful quote", 
   const rateLimited: RatesStoreState = {
     updatedAt: "2026-08-20T09:12:00.000Z",
     providers: [
-      record("remitly-standard", "2026-08-20T09:12:00.000Z", 449.28, "error"),
+      {
+        ...record("remitly-standard", "2026-08-20T09:12:00.000Z", 449.28, "error"),
+        snapshot: null,
+      },
     ],
   };
 
@@ -117,4 +120,23 @@ test("mergeStores does not let a later Remitly 429 replace a successful quote", 
   const remitly = merged?.providers.find((item) => item.id === "remitly-standard");
   assert.equal(remitly?.status, "ok");
   assert.equal(remitly?.snapshot?.boardRate, 452.4);
+});
+
+test("mergeStores records a later failed refresh that still kept the last quote", () => {
+  const success: RatesStoreState = {
+    updatedAt: "2026-08-20T09:10:00.000Z",
+    providers: [record("remitly-standard", "2026-08-20T09:10:00.000Z", 452.4)],
+  };
+  const failed: RatesStoreState = {
+    updatedAt: "2026-08-20T09:12:00.000Z",
+    providers: [
+      record("remitly-standard", "2026-08-20T09:12:00.000Z", 452.4, "error"),
+    ],
+  };
+
+  const merged = mergeStores(success, failed);
+  const remitly = merged?.providers.find((item) => item.id === "remitly-standard");
+  assert.equal(remitly?.status, "error");
+  assert.equal(remitly?.snapshot?.boardRate, 452.4);
+  assert.equal(remitly?.updatedAt, "2026-08-20T09:12:00.000Z");
 });

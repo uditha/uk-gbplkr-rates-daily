@@ -12,7 +12,8 @@ export function isNewerRecord(
   if (
     incoming.status === "error" &&
     current.status === "ok" &&
-    current.snapshot
+    current.snapshot &&
+    incoming.snapshot == null
   ) {
     return false;
   }

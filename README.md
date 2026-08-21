@@ -2,7 +2,10 @@
 
 Public heatmap at `/` plus a password-protected collection page at `/desk`.
 
-The public page only **reads stored quotes**. It does not scrape provider websites. Refresh rates from `/desk`, or from the terminal:
+Quotes live **on the server** (Vercel KV). The public page reads that stored copy. It does not scrape providers on every visit.
+
+- If stored quotes are **older than 30 minutes**, the next visitor triggers a server refresh. The new quotes are saved, and everyone else sees them without scraping again.
+- A refresh from `/desk` (or `npm run refresh`) is **immediate**. It does not wait for the 30-minute window.
 
 ```bash
 npm run refresh                  # all wired providers
@@ -10,6 +13,14 @@ npm run refresh remitwire-boc-uk # one provider
 ```
 
 Sign in at `/desk` with the default password in the app. Override it with `ADMIN_PASSWORD` on Vercel if you want a different one.
+
+## Where the data lives
+
+1. **Vercel KV** — shared server store for every visitor (`KV_REST_API_URL` + `KV_REST_API_TOKEN`, or the Upstash equivalents). Add this in the Vercel project: Storage → Create Database → KV.
+2. **Desk / terminal refresh** — scrapes now, then writes that same KV copy.
+3. Browser storage is only a local cache when KV is not configured.
+
+Without KV, each serverless instance keeps its own copy and visitors will not share one live rate table.
 
 ## RemitWire (BOC UK)
 
@@ -48,9 +59,9 @@ npm run build
 
 ## Deploy on Vercel
 
-Import this GitHub repository at [vercel.com/new](https://vercel.com/new) and deploy the branch `cursor/gbp-lkr-heatmap-page-6ee2` (empty `main` does not include the heatmap). Use `/desk` to pull fresh rates after deploy.
+Import this GitHub repository at [vercel.com/new](https://vercel.com/new) and deploy the branch `cursor/gbp-lkr-heatmap-page-6ee2` (empty `main` does not include the heatmap). Add **Vercel KV** so every visitor sees the same server copy. Use `/desk` for an immediate refresh; otherwise the heatmap updates stored quotes when they are more than 30 minutes old.
 
-Vercel serverless functions do not share `/tmp` or memory, so a refresh would otherwise vanish when you open the heatmap. This app keeps the latest quotes in the current session. To persist them across reloads and visitors, add **Vercel KV** (Storage → Create Database → KV). The app reads `KV_REST_API_URL` and `KV_REST_API_TOKEN` (or the Upstash equivalents). That is the shared store — a SQL database is not required.
+Vercel serverless functions do not share `/tmp` or memory. KV is the shared store — a SQL database is not required.
 
 Hobby plans can only run functions in **one** region and cannot use Function Failover (passive regions). This repo pins London in `vercel.json` (`regions: ["lhr1"]`). If deploy fails with *“Deploying Serverless Function passive regions is restricted to the Enterprise plan”*:
 
