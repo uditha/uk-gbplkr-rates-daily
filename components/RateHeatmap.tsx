@@ -219,7 +219,7 @@ function HeatmapLegend() {
   return (
     <>
       <div className="flex shrink-0 items-center gap-2 px-0.5 pt-1 lg:hidden">
-        <span className="text-[10px] font-medium text-zinc-500">Best</span>
+        <span className="text-[10px] font-medium text-emerald-800">Best</span>
         <div
           className="h-2 min-w-0 flex-1 rounded-full"
           style={{ background: heatmapGradient("to right") }}
@@ -227,8 +227,8 @@ function HeatmapLegend() {
         <span className="text-[10px] font-medium text-zinc-500">Worse</span>
       </div>
       <div className="hidden h-full min-h-0 w-[4.75rem] shrink-0 flex-col overflow-hidden pl-1 lg:flex">
-        <p className="mb-2 text-[10px] leading-tight text-zinc-500">
-          Best in column
+        <p className="mb-2 text-[10px] leading-tight text-emerald-800">
+          Best
         </p>
         <div className="flex min-h-0 flex-1 items-stretch gap-1.5 overflow-hidden">
           <div

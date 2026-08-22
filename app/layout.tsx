@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "UK → Sri Lanka remittance rates",
+  title: "Best UK → Sri Lanka remittance rates",
   description:
-    "Live GBP to LKR remittance heatmap. RemitWire (BOC UK) effective rates by send amount.",
+    "Compare GBP to LKR send rates. Green is the best rate in each column. Higher LKR per £1 means more rupees for your pounds.",
 };
 
 export const viewport: Viewport = {
