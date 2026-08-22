@@ -16,3 +16,26 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+.heatmap-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+.heatmap-grid {
+  --heatmap-name-col: 6.75rem;
+  min-width: max(100%, 44rem);
+}
+
+@media (min-width: 640px) {
+  .heatmap-grid {
+    --heatmap-name-col: 10rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .heatmap-grid {
+    --heatmap-name-col: 12.5rem;
+    min-width: 100%;
+  }
+}

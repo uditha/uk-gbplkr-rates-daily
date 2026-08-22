@@ -50,4 +50,9 @@ describe("heatmapGradient", () => {
     assert.match(gradient, /^linear-gradient\(to bottom,/);
     assert.equal(gradient.includes("purple"), false);
   });
+
+  it("can draw the same scale left to right for a compact mobile legend", () => {
+    const gradient = heatmapGradient("to right");
+    assert.match(gradient, /^linear-gradient\(to right,/);
+  });
 });

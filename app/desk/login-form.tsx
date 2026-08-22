@@ -49,7 +49,7 @@ export function DeskLoginForm() {
             autoComplete="current-password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            className="rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900"
+            className="min-h-11 rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 sm:min-h-0 sm:text-sm"
             required
           />
         </label>
@@ -57,7 +57,7 @@ export function DeskLoginForm() {
         <button
           type="submit"
           disabled={busy}
-          className="rounded-md bg-zinc-900 px-3 py-2 text-sm text-white hover:bg-zinc-800 disabled:opacity-50"
+          className="min-h-11 rounded-md bg-zinc-900 px-3 py-2 text-sm text-white hover:bg-zinc-800 disabled:opacity-50"
         >
           {busy ? "Signing in…" : "Sign in"}
         </button>

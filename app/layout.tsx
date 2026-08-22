@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { RatesProvider } from "@/components/RatesProvider";
 import { hasSharedStore, loadStore } from "@/lib/store/rates-store";
@@ -20,6 +20,13 @@ export const metadata: Metadata = {
     "Live GBP to LKR remittance heatmap. RemitWire (BOC UK) effective rates by send amount.",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#f4f4f5",
+};
+
 /** Hobby plans allow one function region. London is closest to this UK corridor. */
 export const preferredRegion = "lhr1";
 export const dynamic = "force-dynamic";
@@ -31,10 +38,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       style={{ colorScheme: "light" }}
     >
-      <body className="h-full bg-zinc-100 font-sans text-zinc-900">
+      <body className="min-h-dvh bg-zinc-100 font-sans text-zinc-900">
         <RatesProvider
           initialState={initialState}
           sharedStore={hasSharedStore()}

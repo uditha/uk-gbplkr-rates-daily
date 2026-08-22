@@ -52,16 +52,16 @@ export function RateHeatmap({
   });
 
   return (
-    <div className="flex h-full min-h-0 min-w-0 w-full items-stretch gap-2 overflow-hidden">
-      <div className="min-h-0 min-w-0 flex-1 overflow-hidden">
+    <div className="flex h-full min-h-0 min-w-0 w-full flex-col items-stretch gap-1 overflow-hidden lg:flex-row lg:gap-2">
+      <div className="heatmap-scroll min-h-0 min-w-0 flex-1 overflow-auto">
         <div
-          className="grid h-full w-full gap-1 overflow-hidden"
+          className="heatmap-grid grid h-full gap-1"
           style={{
-            gridTemplateColumns: `${HEATMAP_NAME_COLUMN} repeat(${data.amounts.length}, minmax(0, 1fr))`,
-            gridTemplateRows: `1.5rem repeat(${data.providers.length}, minmax(0, 1fr))`,
+            gridTemplateColumns: `var(--heatmap-name-col) repeat(${data.amounts.length}, minmax(3.15rem, 1fr))`,
+            gridTemplateRows: `1.65rem repeat(${data.providers.length}, minmax(2.35rem, 1fr))`,
           }}
         >
-          <div className="bg-white" />
+          <div className="sticky left-0 z-20 bg-white shadow-[4px_0_8px_-6px_rgba(24,24,27,0.18)]" />
           {data.amounts.map((amount) => {
             const active = amount.amountGbp === activeAmountGbp;
             return (
@@ -78,16 +78,23 @@ export function RateHeatmap({
 
           {data.providers.map((provider) => (
             <div key={provider.id} className="contents">
-              <div className="flex min-w-0 items-center gap-2 overflow-hidden bg-white pr-2">
-                <ProviderLogo id={provider.id} name={provider.name} size={24} />
+              <div className="sticky left-0 z-20 flex min-w-0 items-center gap-1.5 overflow-hidden bg-white pr-1.5 shadow-[4px_0_8px_-6px_rgba(24,24,27,0.18)] sm:gap-2 sm:pr-2">
+                <ProviderLogo
+                  id={provider.id}
+                  name={provider.name}
+                  size={22}
+                />
                 <div className="min-w-0">
-                  <span className="block truncate text-[12px] font-medium leading-tight text-zinc-800">
+                  <span className="block truncate text-[11px] font-medium leading-tight text-zinc-800 sm:text-[12px]">
                     {provider.name}
                   </span>
-                  <span className="mt-0.5 block truncate font-mono text-[10px] tabular-nums text-zinc-500">
+                  <span className="mt-0.5 hidden truncate font-mono text-[10px] tabular-nums text-zinc-500 sm:block">
                     {formatRate(provider.boardRate)}
                     {provider.rateKind === "buying" ? " buy" : ""}
                     {provider.asOf ? ` · ${provider.asOf}` : ""}
+                  </span>
+                  <span className="mt-0.5 block truncate font-mono text-[10px] tabular-nums text-zinc-500 sm:hidden">
+                    {formatRate(provider.boardRate)}
                   </span>
                 </div>
               </div>
@@ -151,10 +158,10 @@ function UnavailableCell({
       title={`${providerName} £${label}: ${unavailableReason(caption)}`}
       className="flex h-full min-h-0 min-w-0 flex-col items-center justify-center overflow-hidden rounded-md bg-zinc-50 px-0.5 py-1 text-center text-zinc-400 ring-1 ring-zinc-100"
     >
-      <span className="font-mono text-[length:clamp(10px,1.05vw,13px)] font-semibold tabular-nums leading-none">
+      <span className="font-mono text-[11px] font-semibold tabular-nums leading-none sm:text-[length:clamp(10px,1.05vw,13px)]">
         —
       </span>
-      <span className="mt-0.5 font-mono text-[length:clamp(8px,0.85vw,11px)] tabular-nums leading-none">
+      <span className="mt-0.5 font-mono text-[9px] tabular-nums leading-none sm:text-[length:clamp(8px,0.85vw,11px)]">
         {caption}
       </span>
     </div>
@@ -198,10 +205,10 @@ function HeatmapCell({
         boxShadow: isLeader ? "inset 0 0 0 2px rgba(255,255,255,0.7)" : undefined,
       }}
     >
-      <span className="font-mono text-[length:clamp(10px,1.05vw,13px)] font-semibold tabular-nums leading-none">
+      <span className="font-mono text-[11px] font-semibold tabular-nums leading-none sm:text-[length:clamp(10px,1.05vw,13px)]">
         {formatRate(quote.effectiveRate)}
       </span>
-      <span className="mt-0.5 font-mono text-[length:clamp(8px,0.85vw,11px)] tabular-nums leading-none opacity-90">
+      <span className="mt-0.5 font-mono text-[9px] tabular-nums leading-none opacity-90 sm:text-[length:clamp(8px,0.85vw,11px)]">
         {formatLkr(quote.lkrReceived)}
       </span>
     </div>
@@ -210,27 +217,37 @@ function HeatmapCell({
 
 function HeatmapLegend() {
   return (
-    <div className="flex h-full min-h-0 w-[4.75rem] shrink-0 flex-col overflow-hidden pl-1">
-      <p className="mb-2 text-[10px] leading-tight text-zinc-500">
-        Best in column
-      </p>
-      <div className="flex min-h-0 flex-1 items-stretch gap-1.5 overflow-hidden">
+    <>
+      <div className="flex shrink-0 items-center gap-2 px-0.5 pt-1 lg:hidden">
+        <span className="text-[10px] font-medium text-zinc-500">Best</span>
         <div
-          className="w-2.5 rounded-full"
-          style={{ background: heatmapGradient() }}
+          className="h-2 min-w-0 flex-1 rounded-full"
+          style={{ background: heatmapGradient("to right") }}
         />
-        <div className="relative w-10">
-          {HEATMAP_TICKS.map((tick) => (
-            <span
-              key={tick.value}
-              className="absolute left-0 -translate-y-1/2 font-mono text-[11px] tabular-nums text-zinc-500"
-              style={{ top: `${(tick.value / HEATMAP_MAX) * 100}%` }}
-            >
-              {tick.label}
-            </span>
-          ))}
+        <span className="text-[10px] font-medium text-zinc-500">Worse</span>
+      </div>
+      <div className="hidden h-full min-h-0 w-[4.75rem] shrink-0 flex-col overflow-hidden pl-1 lg:flex">
+        <p className="mb-2 text-[10px] leading-tight text-zinc-500">
+          Best in column
+        </p>
+        <div className="flex min-h-0 flex-1 items-stretch gap-1.5 overflow-hidden">
+          <div
+            className="w-2.5 rounded-full"
+            style={{ background: heatmapGradient() }}
+          />
+          <div className="relative w-10">
+            {HEATMAP_TICKS.map((tick) => (
+              <span
+                key={tick.value}
+                className="absolute left-0 -translate-y-1/2 font-mono text-[11px] tabular-nums text-zinc-500"
+                style={{ top: `${(tick.value / HEATMAP_MAX) * 100}%` }}
+              >
+                {tick.label}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

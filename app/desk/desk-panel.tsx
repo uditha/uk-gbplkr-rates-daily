@@ -76,16 +76,16 @@ export function DeskPanel() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-8 sm:px-6">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-6 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-6 sm:py-8">
+      <header className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
+        <h1 className="text-xl font-semibold tracking-tight text-zinc-900 sm:text-2xl">
           Rate collection
         </h1>
-        <div className="flex gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
           <Link
             href="/"
             prefetch={false}
-            className="rounded-md border border-zinc-200 px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50"
+            className="min-h-11 rounded-md border border-zinc-200 px-3 py-2 text-center text-sm text-zinc-700 hover:bg-zinc-50 sm:min-h-0"
           >
             View heatmap
           </Link>
@@ -93,14 +93,14 @@ export function DeskPanel() {
             type="button"
             onClick={() => postRates({ providerId: "all" })}
             disabled={busyId != null}
-            className="rounded-md bg-zinc-900 px-3 py-2 text-sm text-white hover:bg-zinc-800 disabled:opacity-50"
+            className="min-h-11 rounded-md bg-zinc-900 px-3 py-2 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 sm:min-h-0"
           >
             {busyId === "all" ? "Refreshing…" : "Refresh wired"}
           </button>
           <button
             type="button"
             onClick={() => void signOut()}
-            className="rounded-md border border-zinc-200 px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50"
+            className="col-span-2 min-h-11 rounded-md border border-zinc-200 px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 sm:col-span-1 sm:min-h-0"
           >
             Sign out
           </button>
@@ -157,7 +157,7 @@ export function DeskPanel() {
                       type="button"
                       onClick={() => postRates({ providerId: record.id })}
                       disabled={!record.wired || busyId != null}
-                      className="rounded-md border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-800 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40"
+                      className="min-h-11 rounded-md border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-800 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-0"
                     >
                       {busyId === record.id ? "Refreshing…" : "Refresh"}
                     </button>

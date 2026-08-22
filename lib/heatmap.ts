@@ -55,11 +55,11 @@ export function colorForBehind(behind: number) {
   };
 }
 
-export function heatmapGradient() {
+export function heatmapGradient(direction = "to bottom") {
   const parts = HEATMAP_STOPS.map((stop) => {
     const [r, g, b] = stop.rgb;
     const pct = (stop.at / HEATMAP_MAX) * 100;
     return `${rgbString(r, g, b)} ${pct}%`;
   });
-  return `linear-gradient(to bottom, ${parts.join(", ")})`;
+  return `linear-gradient(${direction}, ${parts.join(", ")})`;
 }
