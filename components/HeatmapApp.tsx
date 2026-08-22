@@ -116,7 +116,7 @@ export function HeatmapApp() {
       <header className="flex shrink-0 flex-col gap-2 border-b border-zinc-100 px-3 py-2 lg:flex-row lg:items-center lg:gap-3">
         <div className="flex items-baseline justify-between gap-3 lg:w-[12.5rem] lg:shrink-0 lg:flex-col lg:items-start lg:justify-center lg:gap-0">
           <h1 className="truncate text-sm font-semibold tracking-tight text-zinc-900">
-            UK → Sri Lanka
+            Best UK → Sri Lanka
           </h1>
           <p className="truncate text-[11px] text-zinc-500">
             {updatedLabel(data?.fetchedAt, refreshing)}
@@ -157,21 +157,32 @@ export function HeatmapApp() {
             ) : null}
           </form>
 
-          <div className="min-w-0 flex-1 overflow-x-auto heatmap-scroll rounded-xl bg-zinc-50 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.08)]">
-            <div className="flex min-w-min items-stretch divide-x divide-zinc-200 sm:min-w-0">
-              {picks.length > 0 ? (
-                picks.map((pick) => (
-                  <RankedPick key={pick.provider.id} pick={pick} />
-                ))
-              ) : (
-                <p className="px-3 py-2 text-[11px] text-zinc-400">
-                  Type an amount to see the top rates
-                </p>
-              )}
+          <div className="flex min-w-0 flex-1 overflow-hidden rounded-xl bg-zinc-50 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.08)]">
+            <p className="flex shrink-0 items-center px-2.5 text-[10px] font-semibold tracking-[0.14em] text-emerald-800 uppercase">
+              Best
+            </p>
+            <div className="min-w-0 flex-1 overflow-x-auto heatmap-scroll">
+              <div className="flex min-w-min items-stretch divide-x divide-zinc-200 sm:min-w-0">
+                {picks.length > 0 ? (
+                  picks.map((pick) => (
+                    <RankedPick key={pick.provider.id} pick={pick} />
+                  ))
+                ) : (
+                  <p className="px-3 py-2 text-[11px] text-zinc-400">
+                    Type an amount to see the top rates
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </header>
+      <p className="shrink-0 px-3 pt-1.5 text-[11px] leading-4 text-zinc-500">
+        How to read:{" "}
+        <span className="font-medium text-emerald-800">green is best</span> in
+        that send column. The big number is LKR per £1 — higher is more rupees
+        for your pounds.
+      </p>
       <div className="min-h-0 min-w-0 flex-1 overflow-hidden px-2 pb-2 pt-1 sm:px-3 sm:pb-3 sm:pt-2">
         {data ? (
           <RateHeatmap
