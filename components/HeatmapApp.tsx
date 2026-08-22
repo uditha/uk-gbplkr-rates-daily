@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { RateHeatmap, HEATMAP_NAME_COLUMN } from "@/components/RateHeatmap";
+import { RateHeatmap } from "@/components/RateHeatmap";
 import { ProviderLogo } from "@/components/ProviderLogo";
 import { useRatesStore } from "@/components/RatesProvider";
 import {
@@ -34,11 +34,21 @@ const RANK_BADGE = [
   "bg-zinc-300 text-zinc-700",
 ] as const;
 
+function updatedLabel(fetchedAt: string | undefined, refreshing: boolean) {
+  if (fetchedAt) {
+    return `Updated ${new Date(fetchedAt).toLocaleTimeString("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+    })}`;
+  }
+  return refreshing ? "Updating rates…" : "Effective LKR per £1";
+}
+
 function RankedPick({ pick }: { pick: BestSendPick }) {
   const badge = RANK_BADGE[pick.rank - 1] ?? RANK_BADGE[4];
 
   return (
-    <div className="flex min-w-0 flex-1 items-center gap-1.5 px-2 py-1.5">
+    <div className="flex min-w-[8.25rem] flex-1 items-center gap-1.5 px-2 py-1.5 sm:min-w-0">
       <span
         className={`inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold tabular-nums ${badge}`}
       >
@@ -103,78 +113,66 @@ export function HeatmapApp() {
 
   return (
     <>
-      <header className="flex shrink-0 items-center gap-1 border-b border-zinc-100 px-3 py-2">
-        <div
-          className="min-w-0 shrink-0 pr-2"
-          style={{ width: HEATMAP_NAME_COLUMN }}
-        >
+      <header className="flex shrink-0 flex-col gap-2 border-b border-zinc-100 px-3 py-2 lg:flex-row lg:items-center lg:gap-3">
+        <div className="flex items-baseline justify-between gap-3 lg:w-[12.5rem] lg:shrink-0 lg:flex-col lg:items-start lg:justify-center lg:gap-0">
           <h1 className="truncate text-sm font-semibold tracking-tight text-zinc-900">
             UK → Sri Lanka
           </h1>
-          <p className="hidden truncate text-[11px] text-zinc-500 sm:block">
-            {data?.fetchedAt
-              ? `Updated ${new Date(data.fetchedAt).toLocaleTimeString("en-GB", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}`
-              : refreshing
-                ? "Updating rates…"
-                : "Effective LKR per £1"}
+          <p className="truncate text-[11px] text-zinc-500">
+            {updatedLabel(data?.fetchedAt, refreshing)}
           </p>
         </div>
 
-        <div className="flex min-w-0 flex-1 items-center justify-between gap-3">
-          <div className="flex min-w-0 flex-1 items-stretch overflow-hidden rounded-xl bg-zinc-50 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.08)]">
-            <form
-              className="flex shrink-0 items-center gap-1.5 py-1.5 pl-3 pr-2"
-              onSubmit={(event) => event.preventDefault()}
+        <div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-stretch">
+          <form
+            className="flex shrink-0 items-center gap-2"
+            onSubmit={(event) => event.preventDefault()}
+          >
+            <label
+              htmlFor="send-amount"
+              className="shrink-0 text-[11px] font-medium text-zinc-500"
             >
-              <label
-                htmlFor="send-amount"
-                className="shrink-0 text-[11px] font-medium text-zinc-500"
-              >
-                Send
-              </label>
-              <div className="flex items-center rounded-md bg-white px-1.5 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.1)] focus-within:shadow-[inset_0_0_0_1.5px_rgb(4,120,87)]">
-                <span className="text-xs font-medium text-zinc-400">£</span>
-                <input
-                  id="send-amount"
-                  type="text"
-                  inputMode="decimal"
-                  autoComplete="off"
-                  value={rawAmount}
-                  onChange={(event) => setRawAmount(event.target.value)}
-                  placeholder="1,000"
-                  className="w-[4.75rem] bg-transparent px-1 py-1 text-sm font-medium tabular-nums text-zinc-900 outline-none sm:w-[5.5rem]"
-                />
-              </div>
-            </form>
-
-            <div className="my-1.5 w-px shrink-0 bg-zinc-200" />
-
-            <div className="flex min-w-0 flex-1 items-stretch divide-x divide-zinc-200 bg-white/80">
-              {picks.length > 0 ? (
-                picks.map((pick) => (
-                  <RankedPick key={pick.provider.id} pick={pick} />
-                ))
-              ) : (
-                <p className="px-3 py-1.5 text-[11px] text-zinc-400">
-                  Type an amount to see the top rates
-                </p>
-              )}
+              Send
+            </label>
+            <div className="flex min-h-11 flex-1 items-center rounded-lg bg-zinc-50 px-2.5 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.1)] focus-within:shadow-[inset_0_0_0_1.5px_rgb(4,120,87)] sm:min-h-0 sm:flex-none sm:rounded-md sm:bg-white sm:px-1.5">
+              <span className="text-sm font-medium text-zinc-400 sm:text-xs">
+                £
+              </span>
+              <input
+                id="send-amount"
+                type="text"
+                inputMode="decimal"
+                autoComplete="off"
+                enterKeyHint="done"
+                value={rawAmount}
+                onChange={(event) => setRawAmount(event.target.value)}
+                placeholder="1,000"
+                className="w-full min-w-[5rem] bg-transparent px-1 py-2 text-base font-medium tabular-nums text-zinc-900 outline-none sm:w-[5.5rem] sm:py-1 sm:text-sm"
+              />
             </div>
-          </div>
-
-          <div className="flex shrink-0 items-center gap-2">
             {snappedFrom ? (
               <span className="hidden text-[10px] text-zinc-400 sm:inline">
                 from {snappedFrom}
               </span>
             ) : null}
+          </form>
+
+          <div className="min-w-0 flex-1 overflow-x-auto heatmap-scroll rounded-xl bg-zinc-50 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.08)]">
+            <div className="flex min-w-min items-stretch divide-x divide-zinc-200 sm:min-w-0">
+              {picks.length > 0 ? (
+                picks.map((pick) => (
+                  <RankedPick key={pick.provider.id} pick={pick} />
+                ))
+              ) : (
+                <p className="px-3 py-2 text-[11px] text-zinc-400">
+                  Type an amount to see the top rates
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </header>
-      <div className="min-h-0 min-w-0 flex-1 overflow-hidden px-3 pb-3 pt-2">
+      <div className="min-h-0 min-w-0 flex-1 overflow-hidden px-2 pb-2 pt-1 sm:px-3 sm:pb-3 sm:pt-2">
         {data ? (
           <RateHeatmap
             data={data}
