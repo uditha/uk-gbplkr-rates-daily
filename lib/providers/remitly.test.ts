@@ -4,12 +4,15 @@ import { dirname, join } from "node:path";
 import { describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
 import {
+  buildRemitlyColumnSnapshot,
   buildRemitlySnapshot,
+  collectTieredRemitlyEstimates,
   parseRemitlyEstimate,
   quoteRemitlyAmount,
   remitlyNetFeeGbp,
   remitlyReceiveLkr,
   remitlyTotalPaidGbp,
+  type RemitlyEstimate,
 } from "./remitly";
 
 const fixturePath = join(
@@ -108,5 +111,60 @@ describe("buildRemitlySnapshot", () => {
     assert.equal(snapshot.quotes.length, 12);
     assert.equal(snapshot.quotes[0]?.amountGbp, 300);
     assert.equal(snapshot.quotes[6]?.lkrReceived, 4_492_800);
+  });
+});
+
+function estimateAt(amountGbp: number, baseRate: number): RemitlyEstimate {
+  const fee = 1.49;
+  return {
+    sendAmount: amountGbp,
+    receiveAmount: Number((amountGbp * baseRate).toFixed(2)),
+    totalChargeAmount: Number((amountGbp + fee).toFixed(2)),
+    totalFeeAmount: fee,
+    feeDiscountAmount: 0,
+    sendDiscountAmount: 0,
+    feeIsFlat: true,
+    baseRate,
+    promotionalRate: null,
+    promotionalCapGbp: null,
+  };
+}
+
+describe("collectTieredRemitlyEstimates", () => {
+  it("reuses one standard rate across a flat band and quotes the higher large-send rate", async () => {
+    const amounts = [300, 500, 1000, 5000, 10000, 50000];
+    const calls: number[] = [];
+    const estimates = await collectTieredRemitlyEstimates(amounts, async (amount) => {
+      calls.push(amount);
+      return estimateAt(amount, amount >= 10000 ? 446.84 : 446.39);
+    });
+
+    assert.deepEqual(calls, [300, 50000, 1000, 5000, 10000]);
+    assert.equal(estimates[1]?.baseRate, 446.39);
+    assert.equal(estimates[1]?.sendAmount, 500);
+    assert.equal(estimates[4]?.baseRate, 446.84);
+    assert.equal(remitlyReceiveLkr(10000, estimates[4]), 4_468_400);
+    assert.equal(remitlyReceiveLkr(500, estimates[1]), 223195);
+
+    const snapshot = buildRemitlyColumnSnapshot(
+      [
+        estimateAt(300, 446.39),
+        estimateAt(500, 446.39),
+        estimateAt(1000, 446.39),
+        estimateAt(2000, 446.39),
+        estimateAt(2500, 446.39),
+        estimateAt(5000, 446.39),
+        estimateAt(10000, 446.84),
+        estimateAt(15000, 446.84),
+        estimateAt(20000, 446.84),
+        estimateAt(25000, 446.84),
+        estimateAt(50000, 446.84),
+        estimateAt(100000, 446.84),
+      ],
+      "05/11/2026",
+    );
+    assert.equal(snapshot.quotes[0]?.lkrReceived, 133917);
+    assert.equal(snapshot.quotes[6]?.lkrReceived, 4_468_400);
+    assert.equal(snapshot.quotes[6]?.effectiveRate, 4_468_400 / 10001.49);
   });
 });

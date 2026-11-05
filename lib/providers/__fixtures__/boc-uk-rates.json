@@ -1,0 +1,22 @@
+{
+  "pairs": [
+    {
+      "key": "GBP_LKR",
+      "rate": 446,
+      "rate_display": "446.00",
+      "values": ["446.00", "450.00"],
+      "slabs": [
+        { "min": 0, "max": 1000, "type": "fixed", "value": 3 },
+        { "min": 1000, "max": 5000, "type": "fixed", "value": 5 },
+        { "min": 5000, "max": 20000, "type": "fixed", "value": 10 },
+        { "min": 20000, "max": 50000, "type": "fixed", "value": 20 },
+        { "min": 50000, "max": 100000, "type": "fixed", "value": 25 },
+        { "min": 100000, "max": null, "type": "fixed", "value": 30 }
+      ]
+    }
+  ],
+  "columns": ["Buying Rate", "Selling Rate"],
+  "as_of": "Rate as of: 05/11/2026",
+  "fee_mode": "add",
+  "receiveDecimals": 2
+}
