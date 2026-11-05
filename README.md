@@ -24,10 +24,17 @@ Without KV, each serverless instance keeps its own copy and visitors will not sh
 
 ## RemitWire (BOC UK)
 
-1. Read the GBP/LKR **buying** rate from [bankofceylon.co.uk/rates](https://bankofceylon.co.uk/rates/)
-2. Subtract the published RemitWire fee for that send amount
-3. `LKR received = (amount − fee) × buying rate`
-4. `Effective rate = LKR received ÷ amount`
+1. Read GBP/LKR from the [Bank of Ceylon calculator feed](https://bankofceylon.co.uk/wp-json/erc/v1/rates). The buying rate is the rate RemitWire converts at. The rates page is only a fallback.
+2. The calculator **adds** the fee on top of the send amount. It does not take the fee out of the pounds that are converted.
+3. `LKR received = amount × buying rate`
+4. `Effective rate = LKR received ÷ (amount + fee)`
+
+## Remitly (standard)
+
+1. Quote each send-amount column on the [Remitly GBP to LKR calculator](https://www.remitly.com/gb/en/sri-lanka). The standard rate steps up on larger transfers, so the £300 quote is not reused for every column.
+2. New-customer promotional rates are ignored.
+3. The £1.49 fee is added on top. `LKR received = amount × standard rate`
+4. `Effective rate = LKR received ÷ (amount + fee)`
 
 ## Global Exchange
 

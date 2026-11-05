@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { SEND_AMOUNTS } from "./amounts";
 import { BROWSER_USER_AGENT } from "./http";
 import type { ProviderSnapshot, Quote } from "./types";
@@ -9,6 +10,19 @@ export const REMITLY_PROVIDER_ID = "remitly-standard";
 export const REMITLY_PROVIDER_NAME = "Remitly (standard)";
 
 const USER_AGENT = BROWSER_USER_AGENT;
+const REMITLY_DEVICE_ID = randomUUID();
+const REMITLY_MIN_INTERVAL_MS = 1200;
+let nextRemitlyRequestAt = 0;
+
+async function waitForRemitlySlot(): Promise<void> {
+  const now = Date.now();
+  const delay = Math.max(0, nextRemitlyRequestAt - now);
+  nextRemitlyRequestAt =
+    Math.max(now, nextRemitlyRequestAt) + REMITLY_MIN_INTERVAL_MS;
+  if (delay > 0) {
+    await new Promise((resolve) => setTimeout(resolve, delay));
+  }
+}
 
 export type RemitlyEstimate = {
   sendAmount: number;
@@ -17,6 +31,7 @@ export type RemitlyEstimate = {
   totalFeeAmount: number;
   feeDiscountAmount: number;
   sendDiscountAmount: number;
+  feeIsFlat: boolean;
   baseRate: number;
   promotionalRate: number | null;
   promotionalCapGbp: number | null;
@@ -100,6 +115,7 @@ export function parseRemitlyEstimate(payload: unknown): RemitlyEstimate {
     receiveAmount: readNumber(estimate.receive_amount, "receive amount"),
     totalChargeAmount: readNumber(estimate.total_charge_amount, "total charge"),
     totalFeeAmount: readNumber(fee.total_fee_amount, "fee"),
+    feeIsFlat: fee.is_flat !== false,
     feeDiscountAmount:
       discount.fee_discount_amount != null
         ? readNumber(discount.fee_discount_amount, "fee discount")
@@ -135,6 +151,88 @@ export function quoteRemitlyAmount(
   };
 }
 
+export function sameRemitlyPricing(
+  left: RemitlyEstimate,
+  right: RemitlyEstimate,
+): boolean {
+  if (!left.feeIsFlat || !right.feeIsFlat) return false;
+  return (
+    Math.abs(left.baseRate - right.baseRate) < 0.000001 &&
+    Math.abs(remitlyNetFeeGbp(left) - remitlyNetFeeGbp(right)) < 0.001 &&
+    Math.abs(left.sendDiscountAmount - right.sendDiscountAmount) < 0.001
+  );
+}
+
+export function estimateAtAmount(
+  template: RemitlyEstimate,
+  amountGbp: number,
+): RemitlyEstimate {
+  if (template.sendAmount === amountGbp) return template;
+  return {
+    ...template,
+    sendAmount: amountGbp,
+    receiveAmount: remitlyReceiveLkr(amountGbp, template),
+    totalChargeAmount: remitlyTotalPaidGbp(amountGbp, template),
+  };
+}
+
+export async function collectTieredRemitlyEstimates(
+  amounts: number[],
+  fetchEstimate: (amountGbp: number) => Promise<RemitlyEstimate>,
+): Promise<RemitlyEstimate[]> {
+  const byIndex = new Map<number, RemitlyEstimate>();
+
+  async function load(index: number): Promise<RemitlyEstimate> {
+    const existing = byIndex.get(index);
+    if (existing) return existing;
+    const estimate = await fetchEstimate(amounts[index]);
+    byIndex.set(index, estimate);
+    return estimate;
+  }
+
+  async function fill(lo: number, hi: number): Promise<void> {
+    const left = await load(lo);
+    const right = await load(hi);
+    if (hi - lo <= 1 || sameRemitlyPricing(left, right)) return;
+    const mid = Math.floor((lo + hi) / 2);
+    await fill(lo, mid);
+    await fill(mid, hi);
+  }
+
+  if (amounts.length === 0) return [];
+  await fill(0, amounts.length - 1);
+
+  return amounts.map((amount, index) => {
+    const direct = byIndex.get(index);
+    if (direct) return direct;
+    let left = index - 1;
+    while (!byIndex.has(left)) left -= 1;
+    return estimateAtAmount(byIndex.get(left) as RemitlyEstimate, amount);
+  });
+}
+
+export function buildRemitlyColumnSnapshot(
+  estimates: RemitlyEstimate[],
+  asOf: string | null = null,
+): ProviderSnapshot {
+  if (estimates.length !== SEND_AMOUNTS.length) {
+    throw new Error("Remitly quotes did not cover every send amount");
+  }
+  const board = estimates[0];
+  return {
+    id: REMITLY_PROVIDER_ID,
+    name: REMITLY_PROVIDER_NAME,
+    sourceUrl: REMITLY_RATES_URL,
+    pair: "GBPLKR",
+    boardRate: board.baseRate,
+    rateKind: "send",
+    asOf,
+    quotes: SEND_AMOUNTS.map((column, index) =>
+      quoteRemitlyAmount(column.amountGbp, estimates[index]),
+    ),
+  };
+}
+
 export function buildRemitlySnapshot(
   estimate: RemitlyEstimate,
   asOf: string | null = null,
@@ -163,12 +261,16 @@ async function fetchRemitlyEstimateOnce(amountGbp: number): Promise<Response> {
   url.searchParams.set("customer_recognition", "UNRECOGNIZED");
   url.searchParams.set("strict_promo", "true");
 
+  await waitForRemitlySlot();
   return fetch(url, {
     cache: "no-store",
     headers: {
       Accept: "application/json",
+      "Accept-Language": "en-GB",
       Origin: "https://www.remitly.com",
       Referer: REMITLY_RATES_URL,
+      "Remitly-DeviceEnvironmentID": REMITLY_DEVICE_ID,
+      "remittance-distro-id": "app_id_core",
       "User-Agent": USER_AGENT,
     },
     signal: AbortSignal.timeout(15000),
@@ -213,7 +315,10 @@ export async function fetchRemitlyEstimate(
 }
 
 export async function fetchRemitlySnapshot(): Promise<ProviderSnapshot> {
-  const estimate = await fetchRemitlyEstimate(300);
+  const estimates = await collectTieredRemitlyEstimates(
+    SEND_AMOUNTS.map((column) => column.amountGbp),
+    (amountGbp) => fetchRemitlyEstimate(amountGbp),
+  );
   const asOf = new Date().toLocaleDateString("en-GB");
-  return buildRemitlySnapshot(estimate, asOf);
+  return buildRemitlyColumnSnapshot(estimates, asOf);
 }
